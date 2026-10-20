@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2d3a8c">
+<title>ESSP</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --brand:#2d3a8c; --accent:#f29a1f; --ink:#1b2230; --paper:#f6f5f1; --card:#fff;
+    --line:#d9d6cc; --muted:#667085; --ok:#1f8a4c; --warn:#b3261e; --red:#c62828;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","Noto Sans Arabic",system-ui,sans-serif;font-size:16px;line-height:1.5;padding-bottom:92px}
+  body.noscroll{overflow:hidden}
+  header{background:var(--brand);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:center;gap:10px}
+  header img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#fff}
+  header h1{margin:0;font-size:1.05rem}
+  main{max-width:760px;margin:0 auto;padding:14px}
+  section{display:none}
+  section.active{display:block}
+  h2{font-size:1.1rem;margin:20px 0 8px;padding-top:6px}
+  h3{font-size:1rem;margin:16px 0 6px}
+  label{display:block;font-size:.88rem;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:10px;font:inherit;color:inherit;border:1px solid var(--line);border-radius:6px;background:#fff}
+  input[type=checkbox],input[type=radio]{width:20px;height:20px;padding:0;flex:none}
+  input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+  button{font:inherit;padding:10px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--brand);background:var(--brand);color:#fff}
+  button.ghost{background:transparent;color:var(--brand)}
+  button.danger{background:transparent;color:var(--warn);border-color:var(--warn)}
+  button.ok{background:var(--ok);border-color:var(--ok)}
+  button.sm{padding:6px 10px;font-size:.88rem}
+  .muted{color:var(--muted);font-size:.9rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:8px 0}
+  .warnbox{border-color:var(--accent);background:#fff8ec}
+  .row{display:flex;gap:8px;align-items:center}
+  .row > select,.row > input{flex:1;min-width:0}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .split{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .total{font-weight:700}
+  .red{color:var(--red)} .green{color:var(--ok)}
+  .badge{font-size:.78rem;padding:2px 8px;border-radius:99px;color:#fff;background:var(--muted)}
+  .badge.ok{background:var(--ok)} .badge.warn{background:var(--warn)} .badge.mid{background:var(--accent);color:#1b2230}
+  .prow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}
+  .prow .who{display:flex;gap:8px;align-items:center;font-size:1.02rem}
+  .prow .pp{text-align:end}
+  .prow .site{grid-column:1/-1}
+  .seg3{display:grid;grid-template-columns:repeat(3,1fr);grid-column:1/-1}
+  .seg3 button{border-radius:0;background:#fff;color:var(--brand);padding:9px 4px}
+  .seg3 button.on{background:var(--brand);color:#fff}
+  .seg3 button.abs.on{background:var(--muted);border-color:var(--muted)}
+  .seg3 button:first-child{border-start-start-radius:6px;border-end-start-radius:6px}
+  .seg3 button:last-child{border-start-end-radius:6px;border-end-end-radius:6px}
+  .pick{display:flex;gap:10px;align-items:center;margin:0;padding:8px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:.95rem}
+  .pick span{flex:1}
+  .inl{display:inline-flex;align-items:center;gap:6px;margin:6px 14px 6px 0;color:var(--ink);font-size:1rem}
+  .lcard{display:grid;gap:8px}
+  .tw{overflow-x:auto}
+  .logt{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line)}
+  .logt th{color:var(--brand);font-weight:700;padding:10px 6px;background:#eef0fa;text-align:center;font-size:.9rem}
+  .logt td{padding:10px 6px;text-align:center;border-top:1px solid var(--line);font-size:.95rem}
+  .logt tr[data-act]{cursor:pointer}
+  .logt td small{color:var(--muted);font-size:.72rem}
+  .logt .wu{color:var(--red);font-weight:700}
+  .logt .wp{color:var(--ok);font-weight:700}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+  .cal .wd{text-align:center;font-size:.75rem;color:var(--muted)}
+  .cd{aspect-ratio:1;padding:0;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:6px;font-size:.9rem}
+  .cd.empty{border:0;background:transparent}
+  .cd.unp{background:var(--accent);border-color:var(--accent)}
+  .cd.paid{background:var(--ok);border-color:var(--ok);color:#fff}
+  .cd.sel{outline:3px solid var(--brand);outline-offset:1px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;margin:8px 0}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-inline-end:4px;border:1px solid var(--line)}
+  nav{position:fixed;bottom:0;inset-inline:0;display:flex;background:#fff;border-top:1px solid var(--line);z-index:10;padding-bottom:env(safe-area-inset-bottom,0px)}
+  nav button{flex:1;min-width:0;border:0;border-radius:0;background:transparent;color:var(--muted);padding:6px 1px;font-size:.66rem;line-height:1.2}
+  nav button .ic{display:block;font-size:1.2rem}
+  nav button.active{color:var(--brand);font-weight:700;box-shadow:inset 0 3px 0 var(--accent)}
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+  .sheet{background:#fff;width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:14px 14px 0 0;padding:16px}
+  #viewer{position:fixed;inset:0;background:#e6e5e0;z-index:50;overflow:auto}
+  .vbar{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--line);padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .seg{display:flex}
+  .seg button{background:#fff;color:var(--brand);border-radius:0}
+  .seg button:first-child{border-start-start-radius:6px;border-end-start-radius:6px}
+  .seg button:last-child{border-start-end-radius:6px;border-end-end-radius:6px}
+  .seg button.on{background:var(--brand);color:#fff}
+
+  html,body{overscroll-behavior-y:none}
+  label.mini{margin:0 0 3px;font-size:.78rem}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .pk{display:flex;gap:10px;align-items:center;flex:1;margin:0;color:var(--ink);font-size:.95rem}
+  .pk span{display:grid}
+  .pk small{color:var(--muted)}
+  .pick2{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+  .pick2 .pq{width:84px;flex:none;text-align:center}
+  .pickbar{position:sticky;bottom:-16px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--line);margin-top:8px}
+  .vnote{margin:8px;padding:8px 10px;border:1px solid var(--accent);background:#fff8ec;border-radius:8px;font-size:.85rem}
+  button.dangerSolid{background:var(--warn);border-color:var(--warn);color:#fff}
+  #dlg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:110;display:flex;align-items:center;justify-content:center;padding:20px}
+  .dbox{background:#fff;border-radius:12px;padding:18px;width:100%;max-width:420px}
+  .dbox p{margin:0 0 12px;white-space:pre-line}
+  #lock{position:fixed;inset:0;z-index:100;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
+  .lbox{width:100%;max-width:340px;text-align:center;display:grid;gap:12px}
+  .lbox img{width:96px;height:96px;margin:0 auto;border-radius:50%;object-fit:cover;background:#fff}
+  .lbox h2{margin:0;color:#fff}
+  .lbox input{text-align:center;font-size:1.2rem}
+  .lbox button{background:#fff;color:var(--brand);border-color:#fff}
+  .lbox button.linkb{background:transparent;color:#fff;border-color:transparent;text-decoration:underline;font-size:.9rem}
+  .lockmsg{min-height:1.4em;color:#ffd7a0;font-size:.95rem}
+
+  /* ===== Documents (this is what becomes the PDF) ===== */
+  .doc{background:#fff;color:#14181f;padding:24px;font-size:14px;line-height:1.5;max-width:700px;margin:12px auto;border:1px solid var(--line)}
+  .doc .dhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:3px solid var(--brand);padding-bottom:14px}
+  .doc .brand{display:flex;gap:12px;align-items:flex-start}
+  .doc .brand img{width:86px;height:86px;object-fit:contain;flex:none}
+  .doc .cname{font-weight:700;font-size:1.15em;color:var(--brand)}
+  .doc .cinfo{font-size:.86em;color:#333}
+  .doc .dmeta{text-align:end;font-size:.92em;flex:none}
+  .doc .dtitle{font-size:1.4em;font-weight:700;color:var(--brand);margin-bottom:4px}
+  .doc table{width:100%;border-collapse:collapse;margin-top:12px}
+  .doc th{background:var(--brand);color:#fff;padding:7px 6px;text-align:start;font-weight:600;font-size:.86em}
+  .doc td{padding:7px 6px;border-bottom:1px solid #e1e4ea;vertical-align:top;font-size:.94em}
+  .doc td small{color:#777;font-size:.8em}
+  .doc .n{text-align:end;white-space:nowrap}
+  .doc .c{text-align:center}
+  .doc .red{color:#c62828;font-weight:700}
+  .doc .green{color:#1f8a4c;font-weight:700}
+  .doc .box{border:1px solid #cfd4de;border-radius:6px;padding:10px 12px;margin-top:12px}
+  .doc .box .cap{font-size:.82em;color:#666}
+  .doc .tot{margin-top:12px;margin-inline-start:auto;width:min(100%,320px)}
+  .doc .tot div{display:flex;justify-content:space-between;gap:12px;padding:4px 0}
+  .doc .tot .grand{border-top:2px solid var(--brand);font-weight:700;font-size:1.08em;color:var(--brand);margin-top:4px;padding-top:6px}
+  .doc .sign{display:flex;gap:28px;margin-top:46px}
+  .doc .sign div{flex:1;border-top:1px solid #333;padding-top:4px;text-align:center;font-size:.86em}
+  .doc .foot{margin-top:22px;text-align:center;color:#555;font-size:.88em;border-top:1px solid #e1e4ea;padding-top:8px}
+  .doc .line{display:flex;gap:8px;align-items:baseline;margin-top:14px}
+  .doc .line .lb{white-space:nowrap;font-weight:600}
+  .doc .line .vl{flex:1;border-bottom:1px dotted #555;min-height:1.5em;padding:0 6px}
+  .doc .amt{border:2px solid var(--brand);border-radius:6px;padding:6px 16px;font-size:1.4em;font-weight:700;display:inline-block;color:var(--brand)}
+  .doc .cb{display:inline-block;width:14px;height:14px;border:1.5px solid #333;vertical-align:-2px;margin-inline:4px}
+  .doc .cb.on{background:var(--brand)}
+  .doc .stmt{margin-top:14px;font-size:.92em;color:#333}
+</style>
+</head>
+<body>
+<header><img id="hLogo" alt=""><h1 data-i="app"></h1></header>
+
+<main>
+  <section id="tab-daily" class="active"><div id="dailyView"></div></section>
+  <section id="tab-workers"><div id="workersView"></div></section>
+  <section id="tab-invoices"><div id="invoicesView"></div></section>
+  <section id="tab-receipts"><div id="receiptsView"></div></section>
+  <section id="tab-dir"><div id="dirView"></div></section>
+  <section id="tab-report"><div id="reportView"></div></section>
+  <section id="tab-settings"><div id="settingsView"></div></section>
+</main>
+
+<nav>
+  <button data-tab="daily" class="active"><span class="ic">📅</span><span data-i="tabDaily"></span></button>
+  <button data-tab="workers"><span class="ic">👷</span><span data-i="tabWorkers"></span></button>
+  <button data-tab="invoices"><span class="ic">🧾</span><span data-i="tabInvoices"></span></button>
+  <button data-tab="receipts"><span class="ic">💵</span><span data-i="tabReceipts"></span></button>
+  <button data-tab="dir"><span class="ic">📦</span><span data-i="tabDir"></span></button>
+  <button data-tab="report"><span class="ic">📊</span><span data-i="tabReport"></span></button>
+  <button data-tab="settings"><span class="ic">⚙️</span><span data-i="tabSettings"></span></button>
+</nav>
+
+<div id="modal" hidden><div class="sheet" id="sheet"></div></div>
+<div id="dlg" hidden></div>
+<div id="lock" hidden></div>
+
+<div id="viewer" hidden>
+  <div class="vbar">
+    <button class="ghost sm" data-act="vClose" data-i="close"></button>
+    <div class="seg"><button class="sm" data-act="vLang" data-l="ar">العربية</button><button class="sm" data-act="vLang" data-l="en">English</button></div>
+    <button class="sm" data-act="vPdf" data-i="download"></button>
+    <button class="ghost sm" data-act="vShare" data-i="share"></button>
+    <button class="sm ok" id="vWaBtn" data-act="vWa" data-i="waBtn"></button>
+    <button class="ghost sm" id="vCopyBtn" data-act="vCopy" data-i="copyBtn"></button>
+  </div>
+  <div class="vnote" id="vnote" hidden></div>
+  <div id="viewerDoc"></div>
+</div>
+
+<script>
+const LOGO="data:image/jpeg;base64,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";
+
+/* ===================== Translations ===================== */
+const T={
+ar:{
+  app:"ESSP — الحسابات والمستندات",
+  ok:"حسناً",confirmBtn:"تأكيد",savedTo:"تم الحفظ في:",
+  installTitle:"تثبيت التطبيق على التليفون",installDone:"التطبيق مثبّت ويعمل بكامل الشاشة.",
+  installHint:"إذا ما ظهر خيار «تثبيت التطبيق» بقائمة Chrome، اضغط «فحص التثبيت» لتعرف السبب.",installNow:"تثبيت التطبيق الآن",installCheck:"فحص التثبيت",
+  rptHttps:"اتصال آمن (HTTPS)",rptOnline:"التليفون متصل بالإنترنت الآن",rptManifest:"ملف manifest.json موجود",rptIcon:"أيقونة {n}px موجودة",
+  rptSw:"ملف sw.js شغّال (service worker)",rptCtrl:"الصفحة تحت سيطرة الـ service worker",rptPrompt:"Chrome جاهز للتثبيت",
+  rptTipFiles:"إذا ظهر ✗ على manifest أو الأيقونات أو sw.js: ارفع كل الملفات الستة إلى GitHub (مش index.html فقط).",
+  rptTipNet:"التثبيت بيحتاج إنترنت شغّال لحظة الضغط على «تثبيت» (Chrome بيتواصل مع خوادم Google).",
+  rptTipReload:"إذا الـ service worker ✗: أعد تحميل الصفحة مرة وانتظر 10 ثواني ثم اعمل الفحص من جديد.",
+  
+  pickProducts:"اختيار من المنتجات",pickTitle:"اختر المنتجات",pickSearch:"بحث عن منتج...",pickNone:"إلغاء التحديد",pickAdd:"إضافة إلى الفاتورة",pickCount:"المحدد: {n}",
+  pickEmpty:"لا توجد منتجات محفوظة. أضفها من صفحة المنتجات والزبائن.",pickNoMatch:"لا نتائج.",
+  unit:"الوحدة",unitHint:"قطعة، متر، ساعة…",saveAsProduct:"حفظ كمنتج",productSaved:"تم حفظ المنتج.",dupInv:"نسخ",
+  waBtn:"واتساب",copyBtn:"نسخ النص",copied:"تم نسخ النص. الصقه في واتساب.",copyManual:"انسخ النص من هنا:",
+  webviewNote:"ملاحظة: داخل هذا التطبيق قد لا يعمل تحميل أو مشاركة ملف PDF. استعمل زر واتساب أو نسخ النص، أو افتح التطبيق من Chrome.",
+  waCC:"رمز الدولة لواتساب (مثال 961)",
+  
+  confirmDelWorkerAll:"هذا العامل عنده {n} يوم و{p} دفعة و{a} سلفة.\nالحذف النهائي بيمسح كل سجلاته ومستنداته ولا يمكن التراجع. خذ نسخة احتياطية قبل المتابعة.\nهل تريد الحذف نهائياً؟",
+  confirmDelPlaceUsed:"هذا المكان مستخدم في {n} يوم. إذا حذفته بتضل هالأيام بدون مكان. هل تريد المتابعة؟",
+  lockSection:"قفل التطبيق",lockStatusOn:"القفل مفعّل",lockStatusOff:"القفل غير مفعّل",lockSet:"تفعيل القفل",lockChange:"تغيير كلمة السر",
+  lockDisable:"إيقاف القفل",lockNow:"قفل الآن",lockAuto:"يُقفل تلقائياً عند الرجوع للتطبيق بعد",lockAuto0:"فوراً",lockAuto1:"دقيقة",lockAuto5:"5 دقائق",
+  lockNew:"اكتب كلمة السر الجديدة (4 أحرف أو أكثر)",lockRepeat:"أعد كتابة كلمة السر",lockCurrent:"اكتب كلمة السر الحالية",
+  lockMismatch:"كلمتا السر غير متطابقتين.",lockShort:"كلمة السر قصيرة (4 أحرف على الأقل).",lockWrongCur:"كلمة السر الحالية غير صحيحة.",
+  lockDone:"تم تفعيل القفل.",lockOffDone:"تم إيقاف القفل.",lockChanged:"تم تغيير كلمة السر.",
+  lockNote:"القفل يمنع فتح التطبيق فقط، ولا يشفّر البيانات. ملفات النسخ الاحتياطي غير محمية بكلمة سر، فاحفظها بمكان آمن.",
+  lockTitle:"التطبيق مقفل",lockEnter:"كلمة السر",lockUnlock:"فتح",lockWrong:"كلمة السر غير صحيحة.",lockWait:"حاول مرة ثانية بعد {s} ثانية.",
+  lockForgot:"نسيت كلمة السر؟",
+  lockForgotMsg:"ما في طريقة لاسترجاع كلمة السر.\nالحل الوحيد مسح كل بيانات التطبيق وإزالة القفل، وبعدها بتستورد آخر نسخة احتياطية.\nهل تريد مسح كل البيانات؟",
+  tabDaily:"اليوميات",tabWorkers:"العمال",tabInvoices:"الفواتير",tabReceipts:"الإيصالات",tabDir:"المنتجات والزبائن",tabReport:"الملخص",tabSettings:"الإعدادات",
+  date:"التاريخ",extra:"إضافي",ded:"خصم",days:"أيام",delete:"حذف",edit:"تعديل",back:"رجوع",cancel:"إلغاء",close:"إغلاق",
+  download:"تحميل PDF",share:"مشاركة",name:"الاسم",phone:"الهاتف",price:"السعر",qty:"الكمية",desc:"البيان",confirmDel:"هل أنت متأكد من الحذف؟",
+  attAbsent:"غائب",attFull:"كامل",attHalf:"نصف يوم",
+  place:"المكان",choosePlace:"— اختر المكان —",addPlaceBtn:"+ مكان",askPlace:"اسم المكان (الورشة)؟",
+  defPlace:"مكان اليوم (يُستخدم لمن تعلّمه حاضراً)",applyAll:"تطبيق على كل الحاضرين",markAll:"تعليم الكل: كامل",
+  prevDay:"اليوم السابق",nextDay:"اليوم التالي",todayBtn:"اليوم",
+  noWorkers:"أضف عاملاً أولاً من صفحة العمال.",hiddenPaid:"تم قبض {n} عامل عن هذا اليوم، تجدهم في تقويم العامل.",
+  unpaidTitle:"المستحقات غير المقبوضة",nothingUnpaid:"لا توجد مستحقات غير مقبوضة.",totalUnpaid:"مجموع المستحقات",payBtn:"قبض",stmtBtn:"كشف حساب PDF",
+  logTitle:"سجل الأيام",month:"الشهر",worker:"العامل",allWorkers:"كل العمال",allPlaces:"كل الأماكن",status:"الحالة",allStatus:"الكل",
+  colName:"الاسم",colDate:"التاريخ",colAtt:"الدوام",colWage:"الأجرة",noLog:"لا توجد أيام في هذه الفترة.",logTotal:"المجموع",logDays:"عدد الأيام",
+  logPdf:"PDF للسجل",monthLog:"سجل أيام الشهر",
+  editDay:"تعديل اليوم",done:"تم",delDay:"حذف اليوم",paidLocked:"هذا اليوم مقبوض ولا يمكن تعديله. ألغِ الدفعة من صفحة العامل أولاً.",
+  payTitle:"قبض العامل",pickDays:"اختر الأيام التي سيتم قبضها",selAll:"تحديد الكل",advance:"خصم إضافي",payNote:"ملاحظة",payDate:"تاريخ القبض",
+  netLabel:"الصافي",confirmPay:"تأكيد القبض وإنشاء الوصل",noDaysSel:"اختر يوماً واحداً على الأقل.",
+  advDeductNow:"سلف تُخصم الآن",negNet:"الصافي سالب. ألغِ تحديد بعض السلف.",
+  dailyRate:"اليومية",addWorker:"إضافة عامل",details:"التفاصيل",unpaidAmt:"غير مقبوض",paidTotal:"إجمالي المقبوض",
+  daysWorked:"أيام العمل",unpaidDays:"أيام غير مقبوضة",calendar:"التقويم",legendPaid:"مقبوض",legendUnpaid:"غير مقبوض",legendNone:"لم يعمل",
+  payments:"الدفعات السابقة",noPayments:"لا توجد دفعات بعد.",voucherPdf:"وصل PDF",undoPay:"إلغاء الدفعة",
+  confirmUndo:"إلغاء هذه الدفعة؟ ستعود أيامها وسلفها إلى غير مقبوضة.",hasRecords:"لا يمكن حذف عامل لديه سجلات.",
+  prevMonth:"الشهر السابق",nextMonth:"الشهر التالي",noWork:"لم يعمل في هذا اليوم",openDaily:"فتح في اليوميات",monthSummary:"أيام هذا الشهر",
+  monthStmtBtn:"كشف الشهر PDF",
+  placesTitle:"الأماكن (الورش)",placeName:"اسم المكان",addPlace:"إضافة مكان",noPlaces:"لا توجد أماكن بعد.",placeUsed:"لا يمكن حذف مكان مستخدم في سجلات.",
+  advTitle:"السلف",advAmount:"مبلغ السلفة",addAdv:"تسجيل سلفة",advOutstanding:"سلف غير مخصومة",advDeducted:"مخصومة",advPending:"غير مخصومة",
+  advNone:"لا توجد سلف.",needAdvAmount:"أدخل مبلغ السلفة.",advPdf:"وصل سلفة PDF",
+  newInvoice:"فاتورة جديدة",editInvoice:"تعديل الفاتورة",customer:"الزبون",chooseCustomer:"— اختر الزبون —",addCustBtn:"+ زبون",
+  askCustName:"اسم الزبون؟",askCustPhone:"رقم الهاتف (اختياري)",items:"البنود",customItem:"— بند حر —",addLine:"إضافة بند",
+  discount:"الخصم",vatPct:"الضريبة %",notes:"ملاحظات",subtotal:"المجموع الفرعي",total:"الإجمالي",saveInv:"حفظ وعرض PDF",
+  cancelEdit:"إلغاء التعديل",savedInvoices:"الفواتير المحفوظة",noInvoices:"لا توجد فواتير بعد.",paidS:"مدفوعة",partialS:"دفع جزئي",
+  unpaidS:"غير مدفوعة",paidSoFar:"المدفوع",balance:"المتبقي",pdf:"PDF",makeReceipt:"إيصال قبض",needCustomer:"اختر الزبون أولاً.",
+  needLines:"أضف بنداً واحداً على الأقل.",
+  newReceipt:"إيصال قبض جديد",relInvoice:"الفاتورة المرتبطة (اختياري)",noInvoice:"— بدون فاتورة —",amount:"المبلغ",
+  wordsAuto:"المبلغ بالأحرف (تلقائي)",wordsOverride:"كتابة المبلغ بالأحرف يدوياً (اختياري)",forText:"وذلك بدل",method:"طريقة الدفع",
+  cash:"نقداً",cheque:"شيك",chequeNo:"رقم الشيك",drawnOn:"مسحوب على",chequeDate:"تاريخ الشيك",saveRec:"حفظ وعرض PDF",
+  savedReceipts:"الإيصالات المحفوظة",noReceipts:"لا توجد إيصالات بعد.",needAmount:"أدخل المبلغ.",
+  overBalance:"المبلغ أكبر من المتبقي على الفاتورة. هل تريد المتابعة؟",invoiceLabel:"فاتورة",
+  products:"المنتجات",prodName:"اسم المنتج",prodPrice:"سعر المنتج",addProduct:"إضافة منتج",customers:"الزبائن",custName:"اسم الزبون",
+  custAddr:"العنوان",addCustomer:"إضافة زبون",noProducts:"لا توجد منتجات بعد.",noCustomers:"لا يوجد زبائن بعد.",custBalance:"الرصيد المستحق",
+  custStmtBtn:"كشف حساب PDF",
+  repWorkers:"العمال",repEarned:"المستحق عن الشهر",repPaidOut:"المدفوع للعمال هذا الشهر (دفعات + سلف)",repUnpaidAll:"إجمالي غير مقبوض",
+  repAdvOut:"سلف غير مخصومة",repCust:"الزبائن",repInvoiced:"فواتير هذا الشهر",repCollected:"المحصّل هذا الشهر",
+  repReceivable:"مستحق على الزبائن",repByPlace:"حسب المكان",repByWorker:"حسب العامل",repDiff:"المحصّل − المدفوع للعمال",
+  repNote:"الفرق تقريبي ولا يشمل مصاريف المواد وغيرها.",noPlaceLabel:"بدون مكان",
+  uiLang:"لغة التطبيق",defDocLang:"لغة المستندات الافتراضية",company:"بيانات الشركة",coName:"اسم الشركة",coAddrAr:"العنوان بالعربي",
+  coAddrEn:"العنوان بالإنكليزي",coReg:"رقم السجل التجاري",coEmail:"البريد الإلكتروني",logo:"الشعار",changeLogo:"تغيير الشعار",
+  resetLogo:"إعادة شعار ESSP",currency:"العملة",curSymbol:"رمز العملة",curAr:"اسم العملة بالعربي",curEn:"اسم العملة بالإنكليزي",
+  defVat:"الضريبة الافتراضية %",numbering:"الترقيم",nextInv:"رقم الفاتورة القادم",nextRec:"رقم الإيصال القادم",nextPay:"رقم وصل العامل القادم",
+  nextAdv:"رقم وصل السلفة القادم",
+  backup:"النسخ الاحتياطي",backupHint:"بياناتك محفوظة داخل المتصفح فقط. خذ نسخة احتياطية بشكل دوري، وقبل تغيير الهاتف.",
+  backupLast:"آخر نسخة احتياطية",backupNever:"لم تؤخذ بعد",backupWarn:"لم تأخذ نسخة احتياطية منذ مدة. صدّر نسخة الآن لحماية بياناتك.",backupNow:"تصدير الآن",
+  exportData:"تصدير نسخة احتياطية",importData:"استيراد نسخة احتياطية",importOk:"تم الاستيراد.",importFail:"الملف غير صالح.",
+  importConfirm:"سيتم استبدال كل البيانات الحالية. متابعة؟",
+  d_invoice:"فاتورة",d_receipt:"إيصال قبض",d_voucher:"وصل قبض يومية",d_statement:"كشف حساب عامل",d_no:"رقم",d_date:"التاريخ",
+  d_billTo:"فاتورة إلى",d_desc:"البيان",d_qty:"الكمية",d_price:"السعر",d_amount:"المبلغ",d_subtotal:"المجموع الفرعي",d_discount:"الخصم",
+  d_vat:"الضريبة",d_total:"الإجمالي",d_paid:"المدفوع",d_balance:"المتبقي",d_notes:"ملاحظات",d_thanks:"شكراً لتعاملكم معنا",
+  d_coSign:"الختم والتوقيع",d_custSign:"توقيع الزبون",d_reg:"سجل تجاري",d_phone:"هاتف",
+  d_recvFrom:"وصلنا من السيد/السادة",d_sumOf:"مبلغ وقدره",d_for:"وذلك بدل",d_method:"طريقة الدفع",d_cash:"نقداً",d_cheque:"شيك",
+  d_chequeNo:"رقم الشيك",d_drawnOn:"مسحوب على",d_chequeDate:"بتاريخ",d_signature:"التوقيع",d_payOnInv:"دفعة على الفاتورة رقم",
+  d_invTotal:"إجمالي الفاتورة",d_paidUpTo:"المدفوع حتى هذا الإيصال",d_remaining:"المتبقي",
+  d_worker:"العامل",d_site:"المكان",d_att:"الدوام",d_attFull:"كامل",d_attHalf:"نصف يوم",d_rate:"اليومية",d_extra:"إضافي",d_dedCol:"خصم",d_dayPay:"المستحق",
+  d_gross:"إجمالي الأيام",d_ded:"خصم إضافي",d_net:"الصافي المدفوع",d_due:"المبلغ المستحق",d_workerSign:"توقيع العامل",
+  d_recvText:"استلمتُ المبلغ الصافي المذكور أعلاه كأجرة عن الأيام المبيّنة في الجدول.",
+  d_status:"الحالة",d_paidMark:"مقبوض",d_unpaidMark:"غير مقبوض",
+  d_advance:"وصل سلفة",d_advText:"استلمتُ السلفة المذكورة أعلاه، وتُخصم من مستحقاتي القادمة.",d_advDed:"سلف مخصومة",
+  d_advOut:"سلف غير مخصومة",d_netAfter:"الصافي بعد السلف",
+  d_monthStmt:"كشف حساب شهري",d_period:"الفترة",d_totalPaid:"المقبوض",d_totalUnpaid:"غير المقبوض",d_totalAll:"إجمالي الشهر",
+  d_custStmt:"كشف حساب زبون",d_type:"النوع",d_debit:"فواتير",d_credit:"مقبوضات",d_running:"الرصيد",d_typeInv:"فاتورة",d_typeRec:"إيصال قبض",
+  d_totInvoiced:"إجمالي الفواتير",d_totReceived:"إجمالي المقبوض",d_balDue:"الرصيد المستحق",
+  d_log:"كشف الأيام",d_name:"الاسم",d_wage:"الأجرة",d_totalDays:"عدد الأيام",
+  d_only:"فقط لا غير",d_cents:"سنت"
+},
+en:{
+  app:"ESSP — Accounts & Documents",
+  ok:"OK",confirmBtn:"Confirm",savedTo:"Saved to:",
+  installTitle:"Install on this phone",installDone:"The app is installed and runs full-screen.",
+  installHint:"If Chrome does not offer “Install app”, tap “Check installation” to see why.",installNow:"Install app now",installCheck:"Check installation",
+  rptHttps:"Secure connection (HTTPS)",rptOnline:"Phone is online right now",rptManifest:"manifest.json is available",rptIcon:"{n}px icon is available",
+  rptSw:"sw.js is running (service worker)",rptCtrl:"The page is controlled by the service worker",rptPrompt:"Chrome is ready to install",
+  rptTipFiles:"If manifest, icons or sw.js show ✗: upload all six files to GitHub (not only index.html).",
+  rptTipNet:"Installing needs a working internet connection at the moment you tap “Install” (Chrome talks to Google servers).",
+  rptTipReload:"If the service worker shows ✗: reload the page once, wait 10 seconds, then run the check again.",
+  
+  pickProducts:"Pick from products",pickTitle:"Choose products",pickSearch:"Search products...",pickNone:"Clear",pickAdd:"Add to invoice",pickCount:"Selected: {n}",
+  pickEmpty:"No saved products. Add them in Products & Customers.",pickNoMatch:"No results.",
+  unit:"Unit",unitHint:"piece, meter, hour…",saveAsProduct:"Save as product",productSaved:"Product saved.",dupInv:"Copy",
+  waBtn:"WhatsApp",copyBtn:"Copy text",copied:"Text copied. Paste it in WhatsApp.",copyManual:"Copy the text from here:",
+  webviewNote:"Note: inside this app, downloading or sharing PDF files may not work. Use the WhatsApp or Copy text button, or open the app from Chrome.",
+  waCC:"WhatsApp country code (e.g. 961)",
+  
+  confirmDelWorkerAll:"This worker has {n} day(s), {p} payment(s) and {a} advance(s).\nPermanent deletion erases all of them and cannot be undone. Take a backup first.\nDelete permanently?",
+  confirmDelPlaceUsed:"This place is used in {n} day(s). If you delete it, those days will have no place. Continue?",
+  lockSection:"App lock",lockStatusOn:"Lock is on",lockStatusOff:"Lock is off",lockSet:"Turn on lock",lockChange:"Change password",
+  lockDisable:"Turn off lock",lockNow:"Lock now",lockAuto:"Lock automatically when returning to the app after",lockAuto0:"Immediately",lockAuto1:"1 minute",lockAuto5:"5 minutes",
+  lockNew:"Enter the new password (4+ characters)",lockRepeat:"Repeat the password",lockCurrent:"Enter the current password",
+  lockMismatch:"The passwords do not match.",lockShort:"Password too short (at least 4 characters).",lockWrongCur:"The current password is wrong.",
+  lockDone:"Lock enabled.",lockOffDone:"Lock turned off.",lockChanged:"Password changed.",
+  lockNote:"The lock only stops people opening the app; it does not encrypt data. Backup files are not password-protected, so keep them somewhere safe.",
+  lockTitle:"App locked",lockEnter:"Password",lockUnlock:"Unlock",lockWrong:"Wrong password.",lockWait:"Try again in {s} seconds.",
+  lockForgot:"Forgot password?",
+  lockForgotMsg:"There is no way to recover the password.\nThe only option is to erase all app data and remove the lock, then import your latest backup.\nErase all data?",
+  tabDaily:"Daily",tabWorkers:"Workers",tabInvoices:"Invoices",tabReceipts:"Receipts",tabDir:"Products & Customers",tabReport:"Summary",tabSettings:"Settings",
+  date:"Date",extra:"Extra",ded:"Deduction",days:"days",delete:"Delete",edit:"Edit",back:"Back",cancel:"Cancel",close:"Close",
+  download:"Download PDF",share:"Share",name:"Name",phone:"Phone",price:"Price",qty:"Qty",desc:"Description",confirmDel:"Are you sure you want to delete?",
+  attAbsent:"Absent",attFull:"Full day",attHalf:"Half day",
+  place:"Place",choosePlace:"— Choose place —",addPlaceBtn:"+ Place",askPlace:"Place (site) name?",
+  defPlace:"Today's place (used for workers you mark present)",applyAll:"Apply to all present",markAll:"Mark all: full day",
+  prevDay:"Previous day",nextDay:"Next day",todayBtn:"Today",
+  noWorkers:"Add a worker first from the Workers page.",hiddenPaid:"{n} worker(s) already paid for this day; see the worker calendar.",
+  unpaidTitle:"Unpaid balances",nothingUnpaid:"Nothing unpaid.",totalUnpaid:"Total unpaid",payBtn:"Pay",stmtBtn:"Statement PDF",
+  logTitle:"Days log",month:"Month",worker:"Worker",allWorkers:"All workers",allPlaces:"All places",status:"Status",allStatus:"All",
+  colName:"Name",colDate:"Date",colAtt:"Attendance",colWage:"Wage",noLog:"No days in this period.",logTotal:"Total",logDays:"Days",
+  logPdf:"Log PDF",monthLog:"This month's days",
+  editDay:"Edit day",done:"Done",delDay:"Delete day",paidLocked:"This day is already paid and cannot be edited. Undo the payment from the worker page first.",
+  payTitle:"Pay worker",pickDays:"Choose the days to pay",selAll:"Select all",advance:"Extra deduction",payNote:"Note",payDate:"Payment date",
+  netLabel:"Net",confirmPay:"Confirm payment and create voucher",noDaysSel:"Select at least one day.",
+  advDeductNow:"Advances to deduct now",negNet:"Net is negative. Untick some advances.",
+  dailyRate:"Daily rate",addWorker:"Add worker",details:"Details",unpaidAmt:"Unpaid",paidTotal:"Total paid",
+  daysWorked:"Days worked",unpaidDays:"Unpaid days",calendar:"Calendar",legendPaid:"Paid",legendUnpaid:"Unpaid",legendNone:"No work",
+  payments:"Previous payments",noPayments:"No payments yet.",voucherPdf:"Voucher PDF",undoPay:"Undo payment",
+  confirmUndo:"Undo this payment? Its days and advances will become unpaid again.",hasRecords:"Cannot delete a worker who has records.",
+  prevMonth:"Previous",nextMonth:"Next",noWork:"No work on this day",openDaily:"Open in Daily",monthSummary:"Days this month",
+  monthStmtBtn:"Month statement PDF",
+  placesTitle:"Places (sites)",placeName:"Place name",addPlace:"Add place",noPlaces:"No places yet.",placeUsed:"Cannot delete a place used in records.",
+  advTitle:"Advances",advAmount:"Advance amount",addAdv:"Record advance",advOutstanding:"Outstanding advances",advDeducted:"Deducted",advPending:"Pending",
+  advNone:"No advances.",needAdvAmount:"Enter the advance amount.",advPdf:"Advance voucher PDF",
+  newInvoice:"New invoice",editInvoice:"Edit invoice",customer:"Customer",chooseCustomer:"— Choose customer —",addCustBtn:"+ Customer",
+  askCustName:"Customer name?",askCustPhone:"Phone number (optional)",items:"Items",customItem:"— Custom item —",addLine:"Add item",
+  discount:"Discount",vatPct:"VAT %",notes:"Notes",subtotal:"Subtotal",total:"Total",saveInv:"Save and view PDF",
+  cancelEdit:"Cancel editing",savedInvoices:"Saved invoices",noInvoices:"No invoices yet.",paidS:"Paid",partialS:"Partially paid",
+  unpaidS:"Unpaid",paidSoFar:"Paid",balance:"Balance",pdf:"PDF",makeReceipt:"Payment receipt",needCustomer:"Choose a customer first.",
+  needLines:"Add at least one item.",
+  newReceipt:"New payment receipt",relInvoice:"Related invoice (optional)",noInvoice:"— No invoice —",amount:"Amount",
+  wordsAuto:"Amount in words (automatic)",wordsOverride:"Write the amount in words yourself (optional)",forText:"Being payment for",method:"Payment method",
+  cash:"Cash",cheque:"Cheque",chequeNo:"Cheque no.",drawnOn:"Drawn on",chequeDate:"Cheque date",saveRec:"Save and view PDF",
+  savedReceipts:"Saved receipts",noReceipts:"No receipts yet.",needAmount:"Enter the amount.",
+  overBalance:"The amount is more than the invoice balance. Continue?",invoiceLabel:"Invoice",
+  products:"Products",prodName:"Product name",prodPrice:"Product price",addProduct:"Add product",customers:"Customers",custName:"Customer name",
+  custAddr:"Address",addCustomer:"Add customer",noProducts:"No products yet.",noCustomers:"No customers yet.",custBalance:"Balance due",
+  custStmtBtn:"Statement PDF",
+  repWorkers:"Workers",repEarned:"Earned this month",repPaidOut:"Paid to workers this month (payments + advances)",repUnpaidAll:"Total unpaid",
+  repAdvOut:"Outstanding advances",repCust:"Customers",repInvoiced:"Invoiced this month",repCollected:"Collected this month",
+  repReceivable:"Owed by customers",repByPlace:"By place",repByWorker:"By worker",repDiff:"Collected − paid to workers",
+  repNote:"The difference is approximate and does not include materials or other expenses.",noPlaceLabel:"No place",
+  uiLang:"App language",defDocLang:"Default document language",company:"Company details",coName:"Company name",coAddrAr:"Address (Arabic)",
+  coAddrEn:"Address (English)",coReg:"Commercial registration no.",coEmail:"Email",logo:"Logo",changeLogo:"Change logo",
+  resetLogo:"Restore ESSP logo",currency:"Currency",curSymbol:"Currency symbol",curAr:"Currency name (Arabic)",curEn:"Currency name (English)",
+  defVat:"Default VAT %",numbering:"Numbering",nextInv:"Next invoice number",nextRec:"Next receipt number",nextPay:"Next worker voucher number",
+  nextAdv:"Next advance voucher number",
+  backup:"Backup",backupHint:"Your data lives only inside this browser. Take a backup regularly, and before changing phones.",
+  backupLast:"Last backup",backupNever:"never",backupWarn:"No recent backup. Export one now to protect your data.",backupNow:"Export now",
+  exportData:"Export backup",importData:"Import backup",importOk:"Imported.",importFail:"Invalid file.",
+  importConfirm:"This will replace all current data. Continue?",
+  d_invoice:"Invoice",d_receipt:"Payment Receipt",d_voucher:"Wage Payment Voucher",d_statement:"Worker Statement",d_no:"No.",d_date:"Date",
+  d_billTo:"Invoice to",d_desc:"Description",d_qty:"Qty",d_price:"Price",d_amount:"Amount",d_subtotal:"Subtotal",d_discount:"Discount",
+  d_vat:"VAT",d_total:"Total",d_paid:"Paid",d_balance:"Balance due",d_notes:"Notes",d_thanks:"Thank you for your business",
+  d_coSign:"Stamp & signature",d_custSign:"Customer signature",d_reg:"Commercial Reg. No.",d_phone:"Tel",
+  d_recvFrom:"Received from Mr./Messrs.",d_sumOf:"The sum of",d_for:"Being payment for",d_method:"Payment method",d_cash:"Cash",d_cheque:"Cheque",
+  d_chequeNo:"Cheque no.",d_drawnOn:"Drawn on",d_chequeDate:"Dated",d_signature:"Signature",d_payOnInv:"Payment on invoice no.",
+  d_invTotal:"Invoice total",d_paidUpTo:"Paid up to this receipt",d_remaining:"Remaining",
+  d_worker:"Worker",d_site:"Place",d_att:"Attendance",d_attFull:"Full",d_attHalf:"Half day",d_rate:"Daily rate",d_extra:"Extra",d_dedCol:"Deduction",d_dayPay:"Day pay",
+  d_gross:"Total for the days",d_ded:"Extra deduction",d_net:"Net paid",d_due:"Amount due",d_workerSign:"Worker signature",
+  d_recvText:"I received the net amount above as wages for the days listed in the table.",
+  d_status:"Status",d_paidMark:"Paid",d_unpaidMark:"Unpaid",
+  d_advance:"Advance Voucher",d_advText:"I received the advance above, to be deducted from my next wages.",d_advDed:"Advances deducted",
+  d_advOut:"Outstanding advances",d_netAfter:"Net after advances",
+  d_monthStmt:"Monthly Worker Statement",d_period:"Period",d_totalPaid:"Paid",d_totalUnpaid:"Unpaid",d_totalAll:"Month total",
+  d_custStmt:"Customer Statement",d_type:"Type",d_debit:"Invoices",d_credit:"Receipts",d_running:"Balance",d_typeInv:"Invoice",d_typeRec:"Receipt",
+  d_totInvoiced:"Total invoiced",d_totReceived:"Total received",d_balDue:"Balance due",
+  d_log:"Days Log",d_name:"Name",d_wage:"Wage",d_totalDays:"Days",
+  d_only:"only",d_cents:"cents"
+}};
+const MONTHS={ar:["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"],
+  en:["January","February","March","April","May","June","July","August","September","October","November","December"]};
+const WD={ar:["اث","ثل","أر","خم","جم","سب","أح"],en:["Mo","Tu","We","Th","Fr","Sa","Su"]};
+const WK={ar:["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],en:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]};
+
+/* ===================== State & storage ===================== */
+const KEY="essp-app-v2";
+const DEF=()=>({
+  settings:{ui:"ar",doc:"ar",logo:"",cur:"$",curAr:"دولار أمريكي",curEn:"US dollars",vat:0,cc:"961",
+    co:{name:"ESSP GROUP",addrAr:"المنية - مركبتا",addrEn:"Minieh - Markabta",reg:"",email:"radwanmahfoud777@gmail.com",phone:"70 36 85 96"}},
+  no:{inv:1,rec:1,pay:1,adv:1},last:{pl:"",backup:""},
+  workers:[],places:[],days:{},pays:[],advances:[],products:[],customers:[],invoices:[],receipts:[]
+});
+function mergeState(d,j){
+  const s=Object.assign({},d,j);
+  s.settings=Object.assign({},d.settings,j.settings||{});
+  s.settings.co=Object.assign({},d.settings.co,(j.settings||{}).co||{});
+  s.no=Object.assign({},d.no,j.no||{});
+  s.last=Object.assign({},d.last,j.last||{});
+  return s;
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function migrate(){
+  S.places=S.places||[];S.advances=S.advances||[];
+  Object.keys(S.days).forEach(dt=>{
+    const day=S.days[dt];
+    Object.keys(day).forEach(wid=>{
+      const r=day[wid];
+      if(!r.w&&!r.paid){delete day[wid];return;}
+      if(r.site&&!r.pl){
+        let p=S.places.find(x=>x.name===r.site);
+        if(!p){p={id:uid(),name:r.site};S.places.push(p);}
+        r.pl=p.id;
+      }
+      delete r.site;
+    });
+    if(!Object.keys(day).length)delete S.days[dt];
+  });
+}
+function load(){
+  const d=DEF();
+  try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&typeof j==="object")return mergeState(d,j);}catch(e){}
+  return d;
+}
+let S=load();
+migrate();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){uiAlert("تعذر الحفظ / Could not save");}}
+
+/* ===================== Helpers ===================== */
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const t=k=>T[S.settings.ui][k];
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num=v=>parseFloat(v)||0;
+const r2=x=>Math.round(x*100)/100;
+const money=n=>r2(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const pad=n=>String(n).padStart(2,"0");
+const pn=n=>String(n).padStart(6,"0");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());};
+const fd=iso=>{if(!iso)return "";const p=iso.split("-");return p[2]+"/"+p[1]+"/"+p[0];};
+const wday=(iso,L)=>WK[L||S.settings.ui][new Date(iso+"T00:00:00").getDay()];
+const cur=()=>esc(S.settings.cur);
+const LTR=s=>`<bdi dir="ltr">${esc(s)}</bdi>`;
+function setPath(o,p,v){const k=p.split(".");let c=o;for(let i=0;i<k.length-1;i++){if(c[k[i]]==null)c[k[i]]={};c=c[k[i]];}c[k[k.length-1]]=v;}
+
+const ACT={},FN={},D={};
+
+/* ===================== Amount in words ===================== */
+/*NUMWORDS*/
+function joinAnd(a){return a.map((s,i)=>i?"و"+s:s).join(" ");}
+function arWords(n){
+  const o=["","واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة"];
+  const te=["عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر","خمسة عشر","ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر"];
+  const ti=["","","عشرون","ثلاثون","أربعون","خمسون","ستون","سبعون","ثمانون","تسعون"];
+  const hu=["","مائة","مائتان","ثلاثمائة","أربعمائة","خمسمائة","ستمائة","سبعمائة","ثمانمائة","تسعمائة"];
+  const h=x=>{const p=[];const hh=Math.floor(x/100),r=x%100;
+    if(hh)p.push(hu[hh]);
+    if(r>=10&&r<20)p.push(te[r-10]);
+    else if(r>=20){const u=r%10;p.push((u?o[u]+" و":"")+ti[Math.floor(r/10)]);}
+    else if(r>0)p.push(o[r]);
+    return joinAnd(p);};
+  if(n===0)return "صفر";
+  const grp=(g,one,two,few,many)=>g===1?one:g===2?two:(g>=3&&g<=10)?h(g)+" "+few:h(g).replace(/^مائتان$/,"مائتا")+" "+many;
+  const m=Math.floor(n/1e6),th=Math.floor(n%1e6/1e3),r=n%1e3,p=[];
+  if(m)p.push(grp(m,"مليون","مليونان","ملايين","مليون"));
+  if(th)p.push(grp(th,"ألف","ألفان","آلاف","ألف"));
+  if(r)p.push(h(r));
+  return joinAnd(p);
+}
+function enWords(n){
+  const a=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+  const b=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+  const h=x=>{let s="";
+    if(x>=100){s=a[Math.floor(x/100)]+" hundred";x%=100;if(x)s+=" and ";}
+    if(x>=20){s+=b[Math.floor(x/10)]+(x%10?"-"+a[x%10]:"");}
+    else if(x>0){s+=a[x];}
+    return s;};
+  if(n===0)return "zero";
+  const m=Math.floor(n/1e6),th=Math.floor(n%1e6/1e3),r=n%1e3,p=[];
+  if(m)p.push(h(m)+" million");
+  if(th)p.push(h(th)+" thousand");
+  if(r)p.push(h(r));
+  return p.join(" ");
+}
+function amountWords(amount,L){
+  const total=Math.round(num(amount)*100),iv=Math.floor(total/100),cents=total%100;
+  if(iv>=1e9||total<=0)return "";
+  const c=S.settings;
+  if(L==="ar")return arWords(iv)+" "+c.curAr+(cents?" و"+arWords(cents)+" "+T.ar.d_cents:"")+" "+T.ar.d_only;
+  const w=enWords(iv);
+  return w.charAt(0).toUpperCase()+w.slice(1)+" "+c.curEn+(cents?" and "+enWords(cents)+" "+T.en.d_cents:"")+" "+T.en.d_only;
+}
+/*ENDNUMWORDS*/
+
+/* ===================== Domain helpers ===================== */
+const W=id=>S.workers.find(w=>w.id===id);
+const PL=id=>S.places.find(p=>p.id===id);
+const plName=id=>{const p=PL(id);return p?p.name:"";};
+const ensureRec=(date,wid)=>{S.days[date]=S.days[date]||{};return S.days[date][wid]=S.days[date][wid]||{};};
+const fOf=r=>r.f!=null?r.f:1;
+const rateOf=(w,r)=>r.r!=null?r.r:w.rate;
+const payOfRec=(w,r)=>rateOf(w,r)*fOf(r)+num(r.x)-num(r.d);
+const attUI=f=>t(f===0.5?"attHalf":"attFull");
+const attDoc=(L,f)=>T[L][f===0.5?"d_attHalf":"d_attFull"];
+function wDays(wid,filter){const out=[];Object.keys(S.days).sort().forEach(d=>{const r=S.days[d][wid];if(r&&r.w&&filter(r))out.push(d);});return out;}
+const unpaidDates=wid=>wDays(wid,r=>!r.paid);
+function allRows(pred){
+  const out=[];
+  Object.keys(S.days).sort().reverse().forEach(dt=>{
+    const ids=Object.keys(S.days[dt]).sort((a,b)=>S.workers.findIndex(x=>x.id===a)-S.workers.findIndex(x=>x.id===b));
+    ids.forEach(wid=>{
+      const r=S.days[dt][wid],w=W(wid);
+      if(!r||!r.w||!w)return;
+      const row={date:dt,wid:wid,name:w.name,plId:r.pl||"",pl:plName(r.pl),f:fOf(r),rate:rateOf(w,r),x:num(r.x),d:num(r.d),pay:payOfRec(w,r),paid:!!r.paid};
+      if(!pred||pred(row))out.push(row);
+    });
+  });
+  return out;
+}
+function dayRows(wid,dates){const set=new Set(dates);return allRows(r=>r.wid===wid&&set.has(r.date)).sort((a,b)=>a.date<b.date?-1:1);}
+const sumPay=rows=>rows.reduce((s,r)=>s+r.pay,0);
+const advPending=wid=>S.advances.filter(a=>a.wid===wid&&!a.payId);
+const advSum=list=>list.reduce((s,a)=>s+a.amount,0);
+function invTotals(inv){
+  const sub=inv.lines.reduce((s,l)=>s+num(l.qty)*num(l.price),0);
+  const disc=Math.min(num(inv.disc),sub);
+  const after=sub-disc;
+  const vat=after*num(inv.vat)/100;
+  return {sub,disc,after,vat,total:after+vat};
+}
+const invPaid=id=>S.receipts.filter(r=>r.invId===id).reduce((s,r)=>s+r.amount,0);
+const invBalance=inv=>r2(invTotals(inv).total-invPaid(inv.id));
+const custOf=(id,name)=>S.customers.find(c=>c.id===id)||{name:name||"",phone:"",addr:""};
+function custBalance(cid){
+  const inv=S.invoices.filter(i=>i.custId===cid).reduce((s,i)=>s+invTotals(i).total,0);
+  const rec=S.receipts.filter(r=>r.custId===cid).reduce((s,r)=>s+r.amount,0);
+  return r2(inv-rec);
+}
+function addPlaceByName(n){
+  let p=S.places.find(x=>x.name.trim().toLowerCase()===n.toLowerCase());
+  if(!p){p={id:uid(),name:n};S.places.push(p);}
+  return p;
+}
+const placeOptions=(sel,key)=>`<option value="">${t(key||"choosePlace")}</option>`+S.places.map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.name)}</option>`).join("");
+
+/* ===================== In-app dialogs (instead of alert / confirm / prompt) ===================== */
+let DLG=null;const DLGQ=[];
+function dlg(o){return new Promise(res=>{DLGQ.push({o:o,res:res});if(!DLG)nextDlg();});}
+function nextDlg(){
+  DLG=DLGQ.shift()||null;
+  if(!DLG){$("#dlg").hidden=true;return;}
+  const o=DLG.o;
+  let h=`<div class="dbox"><p>${esc(o.msg)}</p>`;
+  if(o.mode==="prompt")h+=`<input id="dlgIn" type="${o.type||"text"}" value="${esc(o.def||"")}" autocomplete="off">`;
+  h+=`<div class="btns"><button class="${o.danger?"dangerSolid":""}" data-act="dlgOk">${t(o.mode==="confirm"?"confirmBtn":"ok")}</button>${o.mode==="alert"?"":`<button class="ghost" data-act="dlgNo">${t("cancel")}</button>`}</div></div>`;
+  $("#dlg").innerHTML=h;
+  $("#dlg").hidden=false;
+  const inp=$("#dlgIn");
+  if(inp){setTimeout(()=>{inp.focus();if(inp.select)inp.select();},50);inp.addEventListener("keydown",e=>{if(e.key==="Enter")ACT.dlgOk();});}
+}
+function endDlg(v){const d=DLG;DLG=null;if(d)d.res(v);nextDlg();}
+ACT.dlgOk=()=>{if(!DLG)return;const m=DLG.o.mode;if(m==="alert")endDlg();else if(m==="confirm")endDlg(true);else{const i=$("#dlgIn");endDlg(i?i.value:"");}};
+ACT.dlgNo=()=>{if(!DLG)return;endDlg(DLG.o.mode==="confirm"?false:null);};
+const uiAlert=m=>dlg({mode:"alert",msg:m});
+const uiConfirm=(m,danger)=>dlg({mode:"confirm",msg:m,danger:danger});
+const uiPrompt=(m,def,type)=>dlg({mode:"prompt",msg:m,def:def==null?"":String(def),type:type});
+
+/* ===================== App lock (password) ===================== */
+const LOCKKEY="essp-lock-v1";
+const SHA_K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+function sha256(msg){
+  const bytes=new TextEncoder().encode(msg),l=bytes.length,nb=((l+9+63)>>6)<<6;
+  const buf=new Uint8Array(nb);buf.set(bytes);buf[l]=0x80;
+  const dv=new DataView(buf.buffer);
+  dv.setUint32(nb-8,Math.floor(l*8/4294967296));dv.setUint32(nb-4,(l*8)>>>0);
+  let h0=0x6a09e667,h1=0xbb67ae85,h2=0x3c6ef372,h3=0xa54ff53a,h4=0x510e527f,h5=0x9b05688c,h6=0x1f83d9ab,h7=0x5be0cd19;
+  const w=new Uint32Array(64),rr=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let o=0;o<nb;o+=64){
+    for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){const s0=rr(w[i-15],7)^rr(w[i-15],18)^(w[i-15]>>>3),s1=rr(w[i-2],17)^rr(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;}
+    let a=h0,b=h1,c=h2,d=h3,e=h4,f=h5,g=h6,h=h7;
+    for(let i=0;i<64;i++){
+      const S1=rr(e,6)^rr(e,11)^rr(e,25),ch=(e&f)^(~e&g),t1=(h+S1+ch+SHA_K[i]+w[i])>>>0;
+      const S0=rr(a,2)^rr(a,13)^rr(a,22),mj=(a&b)^(a&c)^(b&c),t2=(S0+mj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;h5=(h5+f)>>>0;h6=(h6+g)>>>0;h7=(h7+h)>>>0;
+  }
+  return [h0,h1,h2,h3,h4,h5,h6,h7].map(x=>x.toString(16).padStart(8,"0")).join("");
+}
+function lockHash(pw,salt){let h=pw;for(let i=0;i<2000;i++)h=sha256(salt+h+pw);return h;}
+function lockCfg(){try{return JSON.parse(localStorage.getItem(LOCKKEY));}catch(e){return null;}}
+function lockSave(c){try{if(c)localStorage.setItem(LOCKKEY,JSON.stringify(c));else localStorage.removeItem(LOCKKEY);}catch(e){}}
+function newSalt(){const a=new Uint8Array(12);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,"0")).join("");}
+let LOCKED=false,lockFails=0,lockWaitUntil=0,hiddenAt=0;
+function showLock(){
+  LOCKED=true;
+  if(VIEW)ACT.vClose();
+  closeModal();
+  DLGQ.length=0;DLG=null;$("#dlg").hidden=true;
+  ["#dailyView","#workersView","#invoicesView","#receiptsView","#dirView","#reportView","#settingsView"].forEach(x=>{$(x).innerHTML="";});
+  $("#lock").innerHTML=`<div class="lbox"><img src="${S.settings.logo||LOGO}" alt=""><h2>${t("lockTitle")}</h2>
+    <input id="lockIn" type="password" placeholder="${t("lockEnter")}" autocomplete="current-password">
+    <div class="lockmsg" id="lockMsg"></div>
+    <button data-act="lockGo">${t("lockUnlock")}</button>
+    <button class="linkb" data-act="lockForgot">${t("lockForgot")}</button></div>`;
+  $("#lock").hidden=false;
+  document.body.classList.add("noscroll");
+  const inp=$("#lockIn");
+  if(inp){inp.addEventListener("keydown",e=>{if(e.key==="Enter")ACT.lockGo();});setTimeout(()=>inp.focus(),80);}
+}
+function unlock(){LOCKED=false;$("#lock").hidden=true;document.body.classList.remove("noscroll");renderAll();gotoTab(curTab);}
+ACT.lockGo=()=>{
+  const c=lockCfg(),inp=$("#lockIn"),msg=$("#lockMsg");
+  if(!c){unlock();return;}
+  const now=Date.now();
+  if(now<lockWaitUntil){msg.textContent=t("lockWait").replace("{s}",Math.ceil((lockWaitUntil-now)/1000));return;}
+  if(lockHash(inp.value,c.salt)===c.hash){lockFails=0;unlock();return;}
+  lockFails++;inp.value="";
+  if(lockFails>=5){lockWaitUntil=Date.now()+30000;lockFails=0;msg.textContent=t("lockWait").replace("{s}",30);}
+  else msg.textContent=t("lockWrong");
+};
+ACT.lockForgot=async()=>{
+  if(!(await uiConfirm(t("lockForgotMsg"),true)))return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  lockSave(null);
+  location.reload();
+};
+async function askNewPw(){
+  const p1=await uiPrompt(t("lockNew"),"","password");
+  if(p1===null)return null;
+  if(p1.length<4){await uiAlert(t("lockShort"));return null;}
+  const p2=await uiPrompt(t("lockRepeat"),"","password");
+  if(p2===null)return null;
+  if(p1!==p2){await uiAlert(t("lockMismatch"));return null;}
+  return p1;
+}
+async function askCurrent(){
+  const c=lockCfg(),p=await uiPrompt(t("lockCurrent"),"","password");
+  if(p===null)return false;
+  if(lockHash(p,c.salt)!==c.hash){await uiAlert(t("lockWrongCur"));return false;}
+  return true;
+}
+ACT.lockEnable=async()=>{
+  const p=await askNewPw();if(p===null)return;
+  const salt=newSalt();
+  lockSave({salt:salt,hash:lockHash(p,salt),mins:1});
+  await uiAlert(t("lockDone"));renderSettings();
+};
+ACT.lockChange=async()=>{
+  if(!(await askCurrent()))return;
+  const p=await askNewPw();if(p===null)return;
+  const c=lockCfg();c.salt=newSalt();c.hash=lockHash(p,c.salt);lockSave(c);
+  await uiAlert(t("lockChanged"));
+};
+ACT.lockDisable=async()=>{
+  if(!(await askCurrent()))return;
+  lockSave(null);await uiAlert(t("lockOffDone"));renderSettings();
+};
+ACT.lockNowBtn=()=>showLock();
+FN.lockMins=(el,val)=>{const c=lockCfg();if(c){c.mins=+val;lockSave(c);}};
+function lockSettingsHTML(){
+  const c=lockCfg();
+  let h=`<h3>${t("lockSection")}</h3><p class="muted">${c?t("lockStatusOn"):t("lockStatusOff")}</p>`;
+  if(!c)h+=`<div class="btns"><button data-act="lockEnable">${t("lockSet")}</button></div>`;
+  else h+=`<label>${t("lockAuto")}</label><select data-fn="lockMins">${[[0,"lockAuto0"],[1,"lockAuto1"],[5,"lockAuto5"]].map(a=>`<option value="${a[0]}" ${c.mins===a[0]?"selected":""}>${t(a[1])}</option>`).join("")}</select>
+    <div class="btns"><button class="sm" data-act="lockNowBtn">${t("lockNow")}</button><button class="sm ghost" data-act="lockChange">${t("lockChange")}</button><button class="sm danger" data-act="lockDisable">${t("lockDisable")}</button></div>`;
+  return h+`<p class="muted">${t("lockNote")}</p>`;
+}
+document.addEventListener("visibilitychange",()=>{
+  const c=lockCfg();
+  if(!c||LOCKED)return;
+  if(document.hidden)hiddenAt=Date.now();
+  else if(hiddenAt&&Date.now()-hiddenAt>=c.mins*60000)showLock();
+});
+
+/* ===================== Events ===================== */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");
+  if(!el)return;
+  const f=ACT[el.dataset.act];
+  if(f){try{const r=f(el,e);if(r&&r.catch)r.catch(er=>console.error(er));}catch(er){console.error(er);}}
+});
+function onField(e){
+  const el=e.target;
+  if(!el||!el.dataset)return;
+  const isText=el.tagName==="TEXTAREA"||(el.tagName==="INPUT"&&!["checkbox","radio","file","date","month"].includes(el.type));
+  if((e.type==="input")!==isText)return;
+  const val=el.type==="checkbox"?el.checked:el.value;
+  if(el.dataset.b)setPath(D,el.dataset.b,val);
+  if(el.dataset.s){let v=val;if(el.dataset.num)v=parseFloat(v)||0;setPath(S,el.dataset.s,v);save();}
+  const fn=el.dataset.fn;
+  if(fn&&FN[fn])FN[fn](el,val);
+}
+document.addEventListener("input",onField);
+document.addEventListener("change",onField);
+
+const UIKEY="essp-ui-v1";
+let curTab="daily";
+function saveUI(){try{localStorage.setItem(UIKEY,JSON.stringify({tab:curTab,wid:WV.id,y:WV.y,m:WV.m,dd:dailyDate,log:LOG,rep:REP.m}));}catch(e){}}
+function gotoTab(n){
+  curTab=n;
+  $$("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===n));
+  $$("main section").forEach(s=>s.classList.toggle("active",s.id==="tab-"+n));
+  window.scrollTo(0,0);
+  saveUI();
+}
+$$("nav button").forEach(b=>{b.onclick=()=>gotoTab(b.dataset.tab);});
+
+/* ===================== Document viewer / PDF ===================== */
+let VIEW=null;
+function showDoc(build,name,text,phone){
+  VIEW={build:build,name:name,L:S.settings.doc,text:text||null,phone:phone||""};
+  $("#vWaBtn").hidden=!VIEW.text;$("#vCopyBtn").hidden=!VIEW.text;
+  const wv=/; wv\)/.test(navigator.userAgent)&&!isNative();
+  $("#vnote").hidden=!wv;$("#vnote").textContent=wv?t("webviewNote"):"";
+  drawView();
+  $("#viewer").hidden=false;
+  document.body.classList.add("noscroll");
+  $("#viewer").scrollTop=0;
+}
+function drawView(){
+  const L=VIEW.L;
+  $("#viewerDoc").innerHTML=`<div class="doc" dir="${L==="ar"?"rtl":"ltr"}" lang="${L}">${VIEW.build(L)}</div>`;
+  $$("#viewer [data-l]").forEach(b=>b.classList.toggle("on",b.dataset.l===L));
+}
+ACT.vClose=()=>{$("#viewer").hidden=true;document.body.classList.remove("noscroll");VIEW=null;};
+ACT.vLang=el=>{VIEW.L=el.dataset.l;S.settings.doc=VIEW.L;save();drawView();};
+function waPhone(raw){
+  let d=String(raw||"").replace(/\D/g,"");
+  if(!d)return "";
+  const cc=String(S.settings.cc||"961").replace(/\D/g,"");
+  if(d.startsWith("00"))d=d.slice(2);
+  else if(d.startsWith("0"))d=cc+d.slice(1);
+  else if(d.length<=8)d=cc+d;
+  return d;
+}
+function openExternal(url){const w=window.open(url,"_blank");if(!w)location.href=url;}
+async function copyText(txt){
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(txt);return true;}}catch(e){}
+  const ta=document.createElement("textarea");
+  ta.value=txt;ta.style.cssText="position:fixed;left:-9999px;top:0";
+  document.body.appendChild(ta);ta.select();
+  let ok=false;try{ok=document.execCommand("copy");}catch(e){}
+  ta.remove();return ok;
+}
+ACT.vWa=()=>{
+  if(!VIEW||!VIEW.text)return;
+  const ph=waPhone(VIEW.phone);
+  openExternal("https://wa.me/"+ph+"?text="+encodeURIComponent(VIEW.text(VIEW.L)));
+};
+ACT.vCopy=async()=>{
+  if(!VIEW||!VIEW.text)return;
+  const txt=VIEW.text(VIEW.L);
+  if(await copyText(txt))await uiAlert(t("copied"));
+  else await uiPrompt(t("copyManual"),txt);
+};
+/* ---- PDF engine: no external libraries (works fully offline) ---- */
+async function docCanvas(src){
+  const W=700;
+  const clone=src.cloneNode(true);
+  clone.style.cssText="max-width:none;width:"+W+"px;margin:0;border:0;box-sizing:border-box;background:#fff";
+  clone.style.fontFamily=getComputedStyle(document.body).fontFamily;
+  const host=document.createElement("div");
+  host.style.cssText="position:fixed;left:-10000px;top:0;width:"+W+"px";
+  host.appendChild(clone);document.body.appendChild(host);
+  const H=Math.ceil(clone.getBoundingClientRect().height)+2;
+  host.remove();
+  const css=$$("style").map(x=>x.textContent).join("\n");
+  const xml=new XMLSerializer().serializeToString(clone);
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><foreignObject x="0" y="0" width="${W}" height="${H}"><style><![CDATA[${css}]]></style>${xml}</foreignObject></svg>`;
+  const img=new Image();
+  await new Promise((res,rej)=>{img.onload=res;img.onerror=()=>rej(new Error("render failed"));img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);});
+  const sc=Math.min(2,16000/H);
+  const c=document.createElement("canvas");
+  c.width=Math.round(W*sc);c.height=Math.round(H*sc);
+  const x=c.getContext("2d");
+  x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.scale(sc,sc);x.drawImage(img,0,0);
+  return c;
+}
+function pdfFromJpeg(jpg,pw,ph){
+  const enc=new TextEncoder(),parts=[],offs=[];let len=0;
+  const put=b=>{if(typeof b==="string")b=enc.encode(b);parts.push(b);len+=b.length;};
+  const PW=595.28,PH=841.89,ih=ph*PW/pw,n=Math.max(1,Math.ceil(ih/PH-0.01)),f=v=>v.toFixed(2);
+  put(new Uint8Array([0x25,0x50,0x44,0x46,0x2d,0x31,0x2e,0x34,0x0a,0x25,0xe2,0xe3,0xcf,0xd3,0x0a]));
+  const obj=(id,body)=>{offs[id]=len;put(id+" 0 obj\n");put(body);put("\nendobj\n");};
+  const kids=[];for(let k=0;k<n;k++)kids.push((4+2*k)+" 0 R");
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
+  obj(2,"<< /Type /Pages /Kids ["+kids.join(" ")+"] /Count "+n+" >>");
+  offs[3]=len;
+  put("3 0 obj\n<< /Type /XObject /Subtype /Image /Width "+pw+" /Height "+ph+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpg.length+" >>\nstream\n");
+  put(jpg);put("\nendstream\nendobj\n");
+  for(let k=0;k<n;k++){
+    const y=PH-ih+k*PH,content="q "+f(PW)+" 0 0 "+f(ih)+" 0 "+f(y)+" cm /Im0 Do Q";
+    obj(4+2*k,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+f(PW)+" "+f(PH)+"] /Resources << /XObject << /Im0 3 0 R >> >> /Contents "+(5+2*k)+" 0 R >>");
+    obj(5+2*k,"<< /Length "+content.length+" >>\nstream\n"+content+"\nendstream");
+  }
+  const total=4+2*n,xo=len;
+  let x="xref\n0 "+total+"\n0000000000 65535 f \n";
+  for(let i=1;i<total;i++)x+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+  put(x+"trailer\n<< /Size "+total+" /Root 1 0 R >>\nstartxref\n"+xo+"\n%%EOF\n");
+  return new Blob(parts,{type:"application/pdf"});
+}
+async function buildPdfFile(){
+  const c=await docCanvas($("#viewerDoc .doc"));
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.92));
+  if(!blob)throw new Error("image failed");
+  const jpg=new Uint8Array(await blob.arrayBuffer());
+  return new File([pdfFromJpeg(jpg,c.width,c.height)],VIEW.name,{type:"application/pdf"});
+}
+const isNative=()=>!!(window.Capacitor&&typeof Capacitor.isNativePlatform==="function"&&Capacitor.isNativePlatform());
+function blobB64(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=()=>rej(new Error("read failed"));r.readAsDataURL(blob);});}
+async function nativeWrite(blob,name,dir){
+  const P=Capacitor.Plugins||{};
+  if(!P.Filesystem)throw new Error("Filesystem plugin missing");
+  const r=await P.Filesystem.writeFile({path:name,data:await blobB64(blob),directory:dir,recursive:true});
+  return r.uri;
+}
+async function nativeShare(blob,name){
+  const P=Capacitor.Plugins||{};
+  if(!P.Share)throw new Error("Share plugin missing");
+  const uri=await nativeWrite(blob,name,"CACHE");
+  await P.Share.share({title:name,files:[uri]});
+}
+const isCancel=e=>/cancel/i.test((e&&e.message)||String(e||""));
+async function saveBlob(blob,name,preferShare){
+  if(isNative()){
+    try{
+      if(preferShare){await nativeShare(blob,name);return;}
+      await nativeWrite(blob,name,"DOCUMENTS");
+      await uiAlert(t("savedTo")+" Documents/"+name);return;
+    }catch(e){
+      if(isCancel(e))return;
+      try{await nativeShare(blob,name);return;}catch(e2){if(!isCancel(e2))await uiAlert("Save failed: "+((e2&&e2.message)||e2));return;}
+    }
+  }
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),15000);
+}
+ACT.vPdf=async()=>{try{const f=await buildPdfFile();await saveBlob(f,f.name);}catch(e){uiAlert("PDF: "+e.message);}};
+ACT.vShare=async()=>{
+  try{
+    const f=await buildPdfFile();
+    if(isNative()){await saveBlob(f,f.name,true);return;}
+    if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});
+    else await saveBlob(f,f.name);
+  }catch(e){if(e.name!=="AbortError"&&!isCancel(e))uiAlert("Share: "+e.message);}
+};
+
+/* ===================== Document builders ===================== */
+const line=(lb,v)=>`<div class="line"><span class="lb">${lb}:</span><span class="vl">${v}</span></div>`;
+function head(L,title,no,date){
+  const c=S.settings.co,d=T[L];
+  return `<div class="dhead">
+    <div class="brand"><img src="${S.settings.logo||LOGO}" alt="">
+      <div class="cinfo"><div class="cname">${esc(c.name)}</div>
+        <div>${esc(L==="ar"?c.addrAr:c.addrEn)}</div>
+        ${c.reg?`<div>${d.d_reg}: ${LTR(c.reg)}</div>`:""}
+        ${c.email?`<div>${LTR(c.email)}</div>`:""}
+        ${c.phone?`<div>${d.d_phone}: ${LTR(c.phone)}</div>`:""}
+      </div></div>
+    <div class="dmeta"><div class="dtitle">${title}</div>
+      ${no!=null?`<div>${d.d_no} ${LTR(pn(no))}</div>`:""}
+      <div>${d.d_date}: ${LTR(fd(date))}</div></div>
+  </div>`;
+}
+function invoiceDoc(inv,L){
+  const d=T[L],tt=invTotals(inv),paid=invPaid(inv.id),c=custOf(inv.custId,inv.custName);
+  let h=head(L,d.d_invoice,inv.no,inv.date);
+  h+=`<div class="box"><div class="cap">${d.d_billTo}</div><strong>${esc(c.name)}</strong>${c.phone?`<div>${LTR(c.phone)}</div>`:""}${c.addr?`<div>${esc(c.addr)}</div>`:""}</div>`;
+  h+=`<table><thead><tr><th>#</th><th>${d.d_desc}</th><th class="n">${d.d_qty}</th><th class="n">${d.d_price} (${cur()})</th><th class="n">${d.d_amount} (${cur()})</th></tr></thead><tbody>`;
+  h+=inv.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${esc(l.desc)}</td><td class="n">${money(num(l.qty))}${l.unit?" "+esc(l.unit):""}</td><td class="n">${money(num(l.price))}</td><td class="n">${money(num(l.qty)*num(l.price))}</td></tr>`).join("");
+  h+=`</tbody></table>`;
+  h+=`<div class="tot"><div><span>${d.d_subtotal}</span><span>${money(tt.sub)} ${cur()}</span></div>`;
+  if(tt.disc>0)h+=`<div><span>${d.d_discount}</span><span>- ${money(tt.disc)} ${cur()}</span></div>`;
+  if(num(inv.vat)>0)h+=`<div><span>${d.d_vat} (${LTR(String(num(inv.vat))+"%")})</span><span>${money(tt.vat)} ${cur()}</span></div>`;
+  h+=`<div class="grand"><span>${d.d_total}</span><span>${money(tt.total)} ${cur()}</span></div>`;
+  if(paid>0)h+=`<div><span>${d.d_paid}</span><span>${money(paid)} ${cur()}</span></div><div class="grand"><span>${d.d_balance}</span><span>${money(tt.total-paid)} ${cur()}</span></div>`;
+  h+=`</div>`;
+  if(inv.notes)h+=`<div class="box"><div class="cap">${d.d_notes}</div>${esc(inv.notes).replace(/\n/g,"<br>")}</div>`;
+  h+=`<div class="sign"><div>${d.d_coSign}</div><div>${d.d_custSign}</div></div>`;
+  h+=`<div class="foot">${d.d_thanks}</div>`;
+  return h;
+}
+function receiptDoc(r,L){
+  const d=T[L],c=custOf(r.custId,r.custName),inv=r.invId?S.invoices.find(i=>i.id===r.invId):null;
+  let h=head(L,d.d_receipt,r.no,r.date);
+  h+=`<div style="margin-top:16px"><span class="amt">${cur()} ${money(r.amount)}</span></div>`;
+  h+=line(d.d_recvFrom,esc(c.name));
+  h+=line(d.d_sumOf,esc(r.words||amountWords(r.amount,L)));
+  h+=line(d.d_for,esc(r.forText||(inv?d.d_payOnInv+" "+pn(inv.no):"")));
+  h+=`<div class="line"><span class="lb">${d.d_method}:</span><span class="vl"><span class="cb ${r.method==="cash"?"on":""}"></span>${d.d_cash} &nbsp;&nbsp; <span class="cb ${r.method==="cheque"?"on":""}"></span>${d.d_cheque}</span></div>`;
+  if(r.method==="cheque"){
+    h+=`<div class="line"><span class="lb">${d.d_chequeNo}:</span><span class="vl">${LTR(r.chequeNo||"")}</span><span class="lb">${d.d_drawnOn}:</span><span class="vl">${esc(r.bank||"")}</span><span class="lb">${d.d_chequeDate}:</span><span class="vl">${LTR(fd(r.chequeDate))}</span></div>`;
+  }
+  if(inv){
+    const total=invTotals(inv).total;
+    const upTo=S.receipts.filter(x=>x.invId===inv.id&&x.no<=r.no).reduce((s,x)=>s+x.amount,0);
+    h+=`<table><thead><tr><th>${d.d_invoice} ${LTR(pn(inv.no))}</th><th class="n">${d.d_invTotal}</th><th class="n">${d.d_paidUpTo}</th><th class="n">${d.d_remaining}</th></tr></thead><tbody><tr><td>${LTR(fd(inv.date))}</td><td class="n">${money(total)} ${cur()}</td><td class="n">${money(upTo)} ${cur()}</td><td class="n">${money(total-upTo)} ${cur()}</td></tr></tbody></table>`;
+  }
+  h+=`<div class="sign"><div>${d.d_signature}</div></div>`;
+  h+=`<div class="foot">${d.d_thanks}</div>`;
+  return h;
+}
+function wTable(L,rows,withStatus){
+  const d=T[L];
+  return `<table><thead><tr><th>${d.d_date}</th><th>${d.d_site}</th><th>${d.d_att}</th><th class="n">${d.d_rate}</th><th class="n">${d.d_extra}</th><th class="n">${d.d_dedCol}</th><th class="n">${d.d_dayPay}</th>${withStatus?`<th>${d.d_status}</th>`:""}</tr></thead><tbody>`+
+    rows.map(r=>`<tr><td><small>${wday(r.date,L)}</small><br>${LTR(fd(r.date))}</td><td>${esc(r.pl)}</td><td>${attDoc(L,r.f)}</td><td class="n">${money(r.rate)}</td><td class="n">${r.x?money(r.x):"-"}</td><td class="n">${r.d?money(r.d):"-"}</td><td class="n">${money(r.pay)}</td>${withStatus?`<td>${r.paid?d.d_paidMark:d.d_unpaidMark}</td>`:""}</tr>`).join("")+
+    `</tbody></table>`;
+}
+function voucherDoc(p,L){
+  const d=T[L],w=W(p.wid)||{name:""};
+  const rows=dayRows(p.wid,p.days);
+  let h=head(L,d.d_voucher,p.no,p.date);
+  h+=line(d.d_worker,esc(w.name));
+  h+=wTable(L,rows,false);
+  h+=`<div class="tot"><div><span>${d.d_gross}</span><span>${money(p.gross)} ${cur()}</span></div>`;
+  if(p.advTotal)h+=`<div><span>${d.d_advDed}</span><span>- ${money(p.advTotal)} ${cur()}</span></div>`;
+  if(p.ded)h+=`<div><span>${d.d_ded}</span><span>- ${money(p.ded)} ${cur()}</span></div>`;
+  h+=`<div class="grand"><span>${d.d_net}</span><span>${money(p.net)} ${cur()}</span></div></div>`;
+  if(p.note)h+=`<div class="box"><div class="cap">${d.d_notes}</div>${esc(p.note)}</div>`;
+  h+=`<p class="stmt">${d.d_recvText}</p>`;
+  h+=`<div class="sign"><div>${d.d_workerSign}</div><div>${d.d_coSign}</div></div>`;
+  return h;
+}
+function statementDoc(wid,L){
+  const d=T[L],w=W(wid);
+  const rows=dayRows(wid,unpaidDates(wid));
+  const due=sumPay(rows),adv=advSum(advPending(wid));
+  let h=head(L,d.d_statement,null,today());
+  h+=line(d.d_worker,esc(w.name));
+  h+=wTable(L,rows,false);
+  h+=`<div class="tot">`;
+  if(adv>0)h+=`<div><span>${d.d_due}</span><span>${money(due)} ${cur()}</span></div><div><span>${d.d_advOut}</span><span>- ${money(adv)} ${cur()}</span></div><div class="grand"><span>${d.d_netAfter}</span><span>${money(due-adv)} ${cur()}</span></div>`;
+  else h+=`<div class="grand"><span>${d.d_due}</span><span>${money(due)} ${cur()}</span></div>`;
+  h+=`</div><div class="sign"><div>${d.d_workerSign}</div><div>${d.d_coSign}</div></div>`;
+  return h;
+}
+function monthStmtDoc(wid,ym,L){
+  const d=T[L],w=W(wid),p=ym.split("-");
+  const rows=allRows(r=>r.wid===wid&&r.date.startsWith(ym)).sort((a,b)=>a.date<b.date?-1:1);
+  const tot=sumPay(rows),paid=sumPay(rows.filter(r=>r.paid));
+  let h=head(L,d.d_monthStmt,null,today());
+  h+=line(d.d_worker,esc(w.name));
+  h+=line(d.d_period,esc(MONTHS[L][+p[1]-1]+" "+p[0]));
+  h+=wTable(L,rows,true);
+  h+=`<div class="tot"><div><span>${d.d_totalPaid}</span><span>${money(paid)} ${cur()}</span></div><div><span>${d.d_totalUnpaid}</span><span>${money(tot-paid)} ${cur()}</span></div><div class="grand"><span>${d.d_totalAll}</span><span>${money(tot)} ${cur()}</span></div></div>`;
+  h+=`<div class="sign"><div>${d.d_workerSign}</div><div>${d.d_coSign}</div></div>`;
+  return h;
+}
+function advanceDoc(a,L){
+  const d=T[L],w=W(a.wid)||{name:""};
+  let h=head(L,d.d_advance,a.no,a.date);
+  h+=`<div style="margin-top:16px"><span class="amt">${cur()} ${money(a.amount)}</span></div>`;
+  h+=line(d.d_worker,esc(w.name));
+  h+=line(d.d_sumOf,esc(amountWords(a.amount,L)));
+  if(a.note)h+=line(d.d_notes,esc(a.note));
+  h+=`<p class="stmt">${d.d_advText}</p>`;
+  h+=`<div class="sign"><div>${d.d_workerSign}</div><div>${d.d_coSign}</div></div>`;
+  return h;
+}
+function logDoc(rows,ym,L){
+  const d=T[L],p=ym.split("-");
+  const tot=sumPay(rows),days=rows.reduce((s,r)=>s+r.f,0),unp=sumPay(rows.filter(r=>!r.paid));
+  let h=head(L,d.d_log,null,today());
+  h+=line(d.d_period,esc(MONTHS[L][+p[1]-1]+" "+p[0]));
+  h+=`<table><thead><tr><th>${d.d_name}</th><th>${d.d_site}</th><th>${d.d_date}</th><th>${d.d_att}</th><th class="n">${d.d_wage}</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td><strong>${esc(r.name)}</strong></td><td>${esc(r.pl)}</td><td><small>${wday(r.date,L)}</small><br>${LTR(fd(r.date))}</td><td>${attDoc(L,r.f)}</td><td class="n ${r.paid?"green":"red"}">${money(r.pay)}</td></tr>`).join("")+`</tbody></table>`;
+  h+=`<div class="tot"><div><span>${d.d_totalDays}</span><span>${money(days)}</span></div><div><span>${d.d_totalUnpaid}</span><span>${money(unp)} ${cur()}</span></div><div class="grand"><span>${d.d_totalAll}</span><span>${money(tot)} ${cur()}</span></div></div>`;
+  return h;
+}
+function custStmtDoc(cid,L){
+  const d=T[L],c=custOf(cid,"");
+  const tx=[];
+  S.invoices.filter(i=>i.custId===cid).forEach(i=>tx.push({date:i.date,type:"inv",no:i.no,amt:invTotals(i).total,ord:0}));
+  S.receipts.filter(r=>r.custId===cid).forEach(r=>tx.push({date:r.date,type:"rec",no:r.no,amt:r.amount,ord:1}));
+  tx.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.ord-b.ord)||(a.no-b.no));
+  let bal=0,inv=0,rec=0;
+  const rows=tx.map(x=>{
+    if(x.type==="inv"){bal+=x.amt;inv+=x.amt;}else{bal-=x.amt;rec+=x.amt;}
+    return `<tr><td>${LTR(fd(x.date))}</td><td>${x.type==="inv"?d.d_typeInv:d.d_typeRec} ${LTR(pn(x.no))}</td><td class="n">${x.type==="inv"?money(x.amt):""}</td><td class="n">${x.type==="rec"?money(x.amt):""}</td><td class="n">${money(bal)}</td></tr>`;
+  }).join("");
+  let h=head(L,d.d_custStmt,null,today());
+  h+=`<div class="box"><div class="cap">${d.d_billTo}</div><strong>${esc(c.name)}</strong>${c.phone?`<div>${LTR(c.phone)}</div>`:""}${c.addr?`<div>${esc(c.addr)}</div>`:""}</div>`;
+  h+=`<table><thead><tr><th>${d.d_date}</th><th>${d.d_type}</th><th class="n">${d.d_debit} (${cur()})</th><th class="n">${d.d_credit} (${cur()})</th><th class="n">${d.d_running} (${cur()})</th></tr></thead><tbody>${rows}</tbody></table>`;
+  h+=`<div class="tot"><div><span>${d.d_totInvoiced}</span><span>${money(inv)} ${cur()}</span></div><div><span>${d.d_totReceived}</span><span>${money(rec)} ${cur()}</span></div><div class="grand"><span>${d.d_balDue}</span><span>${money(inv-rec)} ${cur()}</span></div></div>`;
+  h+=`<div class="foot">${d.d_thanks}</div>`;
+  return h;
+}
+const openInvoice=id=>{const inv=S.invoices.find(i=>i.id===id);if(inv)showDoc(L=>invoiceDoc(inv,L),"invoice-"+pn(inv.no)+".pdf",L=>invoiceText(inv,L),custOf(inv.custId,inv.custName).phone);};
+const openReceipt=id=>{const r=S.receipts.find(i=>i.id===id);if(r)showDoc(L=>receiptDoc(r,L),"receipt-"+pn(r.no)+".pdf",L=>receiptText(r,L),custOf(r.custId,r.custName).phone);};
+const openVoucher=id=>{const p=S.pays.find(i=>i.id===id);if(p){const w=W(p.wid)||{};showDoc(L=>voucherDoc(p,L),"voucher-"+pn(p.no)+".pdf",L=>voucherText(p,L),w.phone);}};
+const openAdvance=id=>{const a=S.advances.find(i=>i.id===id);if(a){const w=W(a.wid)||{};showDoc(L=>advanceDoc(a,L),"advance-"+pn(a.no)+".pdf",L=>advanceText(a,L),w.phone);}};
+/* ----- Plain-text versions (for WhatsApp / copy) ----- */
+const TL=lines=>lines.filter(x=>x!==null&&x!==undefined&&x!==false).join("\n");
+const coHead=()=>"*"+S.settings.co.name+"*";
+function coFoot(L){const c=S.settings.co,d=T[L];return TL([c.phone?d.d_phone+": "+c.phone:null,c.email||null]);}
+function invoiceText(inv,L){
+  const d=T[L],tt=invTotals(inv),paid=invPaid(inv.id),c=custOf(inv.custId,inv.custName),cs=S.settings.cur;
+  const rows=inv.lines.map((l,i)=>(i+1)+") "+l.desc+" — "+money(num(l.qty))+(l.unit?" "+l.unit:"")+" × "+money(num(l.price))+" = "+money(num(l.qty)*num(l.price))+" "+cs);
+  return TL([coHead(),d.d_invoice+" "+d.d_no+" "+pn(inv.no),d.d_date+": "+fd(inv.date),d.d_billTo+": "+c.name,"",...rows,"",
+    tt.disc>0?d.d_discount+": -"+money(tt.disc)+" "+cs:null,
+    num(inv.vat)>0?d.d_vat+" ("+num(inv.vat)+"%): "+money(tt.vat)+" "+cs:null,
+    "*"+d.d_total+": "+money(tt.total)+" "+cs+"*",
+    paid>0?d.d_paid+": "+money(paid)+" "+cs:null,
+    paid>0?d.d_balance+": "+money(tt.total-paid)+" "+cs:null,
+    inv.notes?"":null,inv.notes||null,"",coFoot(L)]);
+}
+function receiptText(r,L){
+  const d=T[L],c=custOf(r.custId,r.custName),inv=r.invId?S.invoices.find(i=>i.id===r.invId):null,cs=S.settings.cur;
+  let extra=null;
+  if(inv){
+    const total=invTotals(inv).total,upTo=S.receipts.filter(x=>x.invId===inv.id&&x.no<=r.no).reduce((s,x)=>s+x.amount,0);
+    extra=d.d_invoice+" "+pn(inv.no)+": "+d.d_invTotal+" "+money(total)+" — "+d.d_paidUpTo+" "+money(upTo)+" — "+d.d_remaining+" "+money(total-upTo)+" "+cs;
+  }
+  const forT=r.forText||(inv?d.d_payOnInv+" "+pn(inv.no):"");
+  const how=r.method==="cheque"?d.d_cheque+(r.chequeNo?" "+r.chequeNo:"")+(r.bank?" — "+r.bank:""):d.d_cash;
+  return TL([coHead(),d.d_receipt+" "+d.d_no+" "+pn(r.no),d.d_date+": "+fd(r.date),d.d_recvFrom+": "+c.name,"*"+cs+" "+money(r.amount)+"*",
+    d.d_sumOf+": "+(r.words||amountWords(r.amount,L)),forT?d.d_for+": "+forT:null,d.d_method+": "+how,extra,"",coFoot(L)]);
+}
+function voucherText(p,L){
+  const d=T[L],w=W(p.wid)||{name:""},cs=S.settings.cur;
+  const rows=dayRows(p.wid,p.days).map(r=>fd(r.date)+(r.pl?" — "+r.pl:"")+(r.f===0.5?" ("+d.d_attHalf+")":"")+": "+money(r.pay)+" "+cs);
+  return TL([coHead(),d.d_voucher+" "+d.d_no+" "+pn(p.no),d.d_date+": "+fd(p.date),d.d_worker+": "+w.name,"",...rows,"",
+    d.d_gross+": "+money(p.gross)+" "+cs,p.advTotal?d.d_advDed+": -"+money(p.advTotal)+" "+cs:null,p.ded?d.d_ded+": -"+money(p.ded)+" "+cs:null,
+    "*"+d.d_net+": "+money(p.net)+" "+cs+"*"]);
+}
+function advanceText(a,L){
+  const d=T[L],w=W(a.wid)||{name:""},cs=S.settings.cur;
+  return TL([coHead(),d.d_advance+" "+d.d_no+" "+pn(a.no),d.d_date+": "+fd(a.date),d.d_worker+": "+w.name,"*"+cs+" "+money(a.amount)+"*",
+    d.d_sumOf+": "+amountWords(a.amount,L),a.note?d.d_notes+": "+a.note:null]);
+}
+function statementText(wid,L){
+  const d=T[L],w=W(wid),cs=S.settings.cur,rows=dayRows(wid,unpaidDates(wid)),due=sumPay(rows),adv=advSum(advPending(wid));
+  return TL([coHead(),d.d_statement,d.d_date+": "+fd(today()),d.d_worker+": "+w.name,"",
+    ...rows.map(r=>fd(r.date)+(r.pl?" — "+r.pl:"")+(r.f===0.5?" ("+d.d_attHalf+")":"")+": "+money(r.pay)+" "+cs),"",
+    adv>0?d.d_due+": "+money(due)+" "+cs:null,adv>0?d.d_advOut+": -"+money(adv)+" "+cs:null,
+    "*"+(adv>0?d.d_netAfter:d.d_due)+": "+money(due-adv)+" "+cs+"*"]);
+}
+function custStmtText(cid,L){
+  const d=T[L],c=custOf(cid,""),cs=S.settings.cur,tx=[];
+  S.invoices.filter(i=>i.custId===cid).forEach(i=>tx.push({date:i.date,type:"inv",no:i.no,amt:invTotals(i).total,ord:0}));
+  S.receipts.filter(r=>r.custId===cid).forEach(r=>tx.push({date:r.date,type:"rec",no:r.no,amt:r.amount,ord:1}));
+  tx.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.ord-b.ord)||(a.no-b.no));
+  let inv=0,rec=0;
+  const rows=tx.map(x=>{if(x.type==="inv")inv+=x.amt;else rec+=x.amt;
+    return fd(x.date)+" — "+(x.type==="inv"?d.d_typeInv:d.d_typeRec)+" "+pn(x.no)+": "+(x.type==="inv"?"+":"-")+money(x.amt)+" "+cs;});
+  return TL([coHead(),d.d_custStmt,d.d_date+": "+fd(today()),d.d_billTo+": "+c.name,"",...rows,"",
+    d.d_totInvoiced+": "+money(inv)+" "+cs,d.d_totReceived+": "+money(rec)+" "+cs,"*"+d.d_balDue+": "+money(inv-rec)+" "+cs+"*","",coFoot(L)]);
+}
+
+
+/* ===================== Days log table (like the screenshot) ===================== */
+const LOG={m:today().slice(0,7),wid:"",pl:"",st:""};
+function logRows(){
+  return allRows(r=>r.date.startsWith(LOG.m)&&(!LOG.wid||r.wid===LOG.wid)&&(!LOG.pl||r.plId===LOG.pl)&&(!LOG.st||(LOG.st==="paid")===r.paid));
+}
+function logTable(rows,showName){
+  if(!rows.length)return `<p class="muted">${t("noLog")}</p>`;
+  const tot=sumPay(rows),unp=sumPay(rows.filter(r=>!r.paid)),days=rows.reduce((s,r)=>s+r.f,0);
+  return `<div class="tw"><table class="logt"><thead><tr>${showName?`<th>${t("colName")}</th>`:""}<th>${t("place")}</th><th>${t("colDate")}</th><th>${t("colAtt")}</th><th>${t("colWage")}</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr data-act="editDay" data-d="${r.date}" data-w="${r.wid}">${showName?`<td><strong>${esc(r.name)}</strong></td>`:""}<td>${esc(r.pl)||"—"}</td><td><small>${wday(r.date)}</small><br>${LTR(r.date)}</td><td>${attUI(r.f)}</td><td class="${r.paid?"wp":"wu"}">${money(r.pay)}${r.paid?" ✓":""}</td></tr>`).join("")+
+    `</tbody></table></div>
+    <div class="card"><div class="split"><span>${t("logDays")}</span><strong>${money(days)}</strong></div>
+    <div class="split"><span>${t("legendUnpaid")}</span><strong class="red">${money(unp)} ${cur()}</strong></div>
+    <div class="split"><span>${t("logTotal")}</span><strong>${money(tot)} ${cur()}</strong></div></div>`;
+}
+function refreshLog(){const el=$("#logBox");if(el)el.innerHTML=logTable(logRows(),true);}
+FN.logM=(el,val)=>{LOG.m=val||today().slice(0,7);saveUI();refreshLog();};
+FN.logW=(el,val)=>{LOG.wid=val;saveUI();refreshLog();};
+FN.logP=(el,val)=>{LOG.pl=val;saveUI();refreshLog();};
+FN.logS=(el,val)=>{LOG.st=val;saveUI();refreshLog();};
+ACT.logPdf=()=>{
+  const rows=logRows();
+  if(!rows.length){uiAlert(t("noLog"));return;}
+  const m=LOG.m;
+  showDoc(L=>logDoc(rows,m,L),"days-log-"+m+".pdf");
+};
+
+/* ===================== DAILY ===================== */
+let dailyDate=today();
+function unpaidHTML(){
+  let total=0;
+  const rows=S.workers.map(w=>{
+    const ds=unpaidDates(w.id);
+    if(!ds.length)return "";
+    const amt=sumPay(dayRows(w.id,ds));
+    total+=amt;
+    return `<div class="card"><div class="split"><div><strong>${esc(w.name)}</strong><div class="muted">${ds.length} ${t("days")}</div></div><strong class="red">${money(amt)} ${cur()}</strong></div>
+      <div class="btns"><button class="sm ok" data-act="payOpen" data-id="${w.id}">${t("payBtn")}</button><button class="sm ghost" data-act="stmt" data-id="${w.id}">${t("stmtBtn")}</button></div></div>`;
+  }).join("");
+  if(!rows)return `<p class="muted">${t("nothingUnpaid")}</p>`;
+  return rows+`<p class="total">${t("totalUnpaid")}: ${money(total)} ${cur()}</p>`;
+}
+function backupBanner(){
+  if(!(S.workers.length||S.invoices.length||S.receipts.length))return "";
+  const b=S.last.backup;
+  const old=!b||((new Date(today())-new Date(b))/864e5>14);
+  return old?`<div class="card warnbox"><div>${t("backupWarn")}</div><div class="btns"><button class="sm" data-act="exportData">${t("backupNow")}</button></div></div>`:"";
+}
+function renderDaily(){
+  const day=S.days[dailyDate]||{};
+  const open=S.workers.filter(w=>!(day[w.id]&&day[w.id].paid));
+  const hidden=S.workers.length-open.length;
+  let h=backupBanner()+`<h2>${t("tabDaily")}</h2>`;
+  h+=`<div class="row"><button class="sm ghost" data-act="dPrev">${t("prevDay")}</button><input type="date" value="${dailyDate}" data-fn="dailyDate"><button class="sm ghost" data-act="dNext">${t("nextDay")}</button></div>`;
+  h+=`<div class="split muted" style="margin:6px 0"><span>${wday(dailyDate)} — ${fd(dailyDate)}</span><button class="sm ghost" data-act="dToday">${t("todayBtn")}</button></div>`;
+  h+=`<div class="card"><label style="margin-top:0">${t("defPlace")}</label><div class="row"><select data-fn="defPl">${placeOptions(S.last.pl)}</select><button class="sm" data-act="quickPlace" data-ctx="def">${t("addPlaceBtn")}</button></div>
+    <div class="btns"><button class="sm ghost" data-act="applyPl">${t("applyAll")}</button><button class="sm ghost" data-act="markAll">${t("markAll")}</button></div></div>`;
+  if(!S.workers.length)h+=`<p class="muted">${t("noWorkers")}</p>`;
+  h+=open.map(w=>{
+    const r=day[w.id]||{},att=r.w?fOf(r):0;
+    const seg=[[0,"attAbsent"],[1,"attFull"],[0.5,"attHalf"]].map(a=>`<button class="${att===a[0]?"on":""} ${a[0]===0?"abs":""}" data-act="att" data-w="${w.id}" data-v="${a[0]}">${t(a[1])}</button>`).join("");
+    return `<div class="card prow" data-w="${w.id}">
+      <div class="who"><strong>${esc(w.name)}</strong></div>
+      <strong class="pp">${money(r.w?payOfRec(w,r):0)} ${cur()}</strong>
+      <div class="seg3">${seg}</div>
+      ${r.w?`<div class="row site"><select data-fn="dayPl">${placeOptions(r.pl)}</select><button class="sm" data-act="quickPlace" data-ctx="row" data-w="${w.id}">${t("addPlaceBtn")}</button></div>
+      <input type="number" inputmode="decimal" placeholder="${t("extra")}" value="${r.x||""}" data-fn="dayF" data-f="x">
+      <input type="number" inputmode="decimal" placeholder="${t("ded")}" value="${r.d||""}" data-fn="dayF" data-f="d">`:""}
+    </div>`;
+  }).join("");
+  if(hidden)h+=`<p class="muted">${t("hiddenPaid").replace("{n}",hidden)}</p>`;
+  h+=`<h2>${t("unpaidTitle")}</h2><div id="unpaidBox">${unpaidHTML()}</div>`;
+  h+=`<h2>${t("logTitle")}</h2>
+    <div class="row2"><div><label>${t("month")}</label><input type="month" value="${LOG.m}" data-fn="logM"></div>
+    <div><label>${t("worker")}</label><select data-fn="logW"><option value="">${t("allWorkers")}</option>${S.workers.map(w=>`<option value="${w.id}" ${LOG.wid===w.id?"selected":""}>${esc(w.name)}</option>`).join("")}</select></div></div>
+    <div class="row2"><div><label>${t("place")}</label><select data-fn="logP">${placeOptions(LOG.pl,"allPlaces")}</select></div>
+    <div><label>${t("status")}</label><select data-fn="logS"><option value="">${t("allStatus")}</option><option value="unpaid" ${LOG.st==="unpaid"?"selected":""}>${t("legendUnpaid")}</option><option value="paid" ${LOG.st==="paid"?"selected":""}>${t("legendPaid")}</option></select></div></div>
+    <div id="logBox" style="margin-top:8px">${logTable(logRows(),true)}</div>
+    <div class="btns"><button class="sm" data-act="logPdf">${t("logPdf")}</button></div>`;
+  $("#dailyView").innerHTML=h;
+}
+FN.dailyDate=(el,val)=>{dailyDate=val||today();saveUI();renderDaily();};
+const shiftDay=n=>{const d=new Date(dailyDate+"T00:00:00");d.setDate(d.getDate()+n);dailyDate=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());saveUI();renderDaily();};
+ACT.dPrev=()=>shiftDay(-1);
+ACT.dNext=()=>shiftDay(1);
+ACT.dToday=()=>{dailyDate=today();saveUI();renderDaily();};
+FN.defPl=(el,val)=>{S.last.pl=val;save();};
+ACT.att=el=>{
+  const wid=el.dataset.w,v=+el.dataset.v,w=W(wid);
+  if(v===0){
+    const day=S.days[dailyDate];
+    if(day&&day[wid]&&!day[wid].paid){delete day[wid];if(!Object.keys(day).length)delete S.days[dailyDate];}
+  }else{
+    const r=ensureRec(dailyDate,wid);
+    if(!r.w){r.w=true;r.r=w.rate;r.pl=r.pl||S.last.pl||"";}
+    r.f=v;
+  }
+  save();renderAll();
+};
+ACT.markAll=()=>{
+  S.workers.forEach(w=>{
+    const r0=(S.days[dailyDate]||{})[w.id];
+    if(r0&&(r0.paid||r0.w))return;
+    const r=ensureRec(dailyDate,w.id);
+    r.w=true;r.f=1;r.r=w.rate;r.pl=r.pl||S.last.pl||"";
+  });
+  save();renderAll();
+};
+ACT.applyPl=()=>{
+  const day=S.days[dailyDate]||{};
+  S.workers.forEach(w=>{const r=day[w.id];if(r&&r.w&&!r.paid)r.pl=S.last.pl||"";});
+  save();renderAll();
+};
+FN.dayPl=(el,val)=>{
+  const wid=el.closest("[data-w]").dataset.w,r=ensureRec(dailyDate,wid);
+  r.pl=val;if(val)S.last.pl=val;
+  save();renderAll();
+};
+FN.dayF=el=>{
+  const card=el.closest("[data-w]"),wid=card.dataset.w,w=W(wid),r=ensureRec(dailyDate,wid),f=el.dataset.f;
+  r[f]=el.value===""?"":num(el.value);
+  save();
+  card.querySelector(".pp").textContent=money(r.w?payOfRec(w,r):0)+" "+S.settings.cur;
+  $("#unpaidBox").innerHTML=unpaidHTML();
+  refreshLog();
+};
+ACT.quickPlace=async el=>{
+  const n=await uiPrompt(t("askPlace"));
+  if(!n||!n.trim())return;
+  const p=addPlaceByName(n.trim()),ctx=el.dataset.ctx;
+  if(ctx==="def"){S.last.pl=p.id;}
+  else if(ctx==="row"){ensureRec(dailyDate,el.dataset.w).pl=p.id;S.last.pl=p.id;}
+  else if(ctx==="edit"&&ED&&S.days[ED.date]&&S.days[ED.date][ED.wid]){S.days[ED.date][ED.wid].pl=p.id;}
+  save();
+  if(ctx==="edit")drawEdit();else renderAll();
+};
+ACT.stmt=el=>{
+  const wid=el.dataset.id,w=W(wid);
+  if(!unpaidDates(wid).length){uiAlert(t("nothingUnpaid"));return;}
+  showDoc(L=>statementDoc(wid,L),"statement-"+w.name.replace(/\s+/g,"_")+".pdf",L=>statementText(wid,L),w.phone);
+};
+
+/* ----- Edit one day (sheet) ----- */
+let ED=null;
+const closeModal=()=>{$("#modal").hidden=true;PAY=null;ED=null;PICK=null;};
+ACT.payClose=()=>{closeModal();};
+function drawEdit(){
+  const r=S.days[ED.date]&&S.days[ED.date][ED.wid];
+  if(!r){closeModal();renderAll();return;}
+  const w=W(ED.wid),f=fOf(r);
+  let h=`<h2>${t("editDay")}</h2><p><strong>${esc(w.name)}</strong> — ${wday(ED.date)} ${fd(ED.date)}</p>`;
+  h+=`<div class="seg3" style="grid-template-columns:1fr 1fr">`+[[1,"attFull"],[0.5,"attHalf"]].map(a=>`<button class="${f===a[0]?"on":""}" data-act="edAtt" data-v="${a[0]}">${t(a[1])}</button>`).join("")+`</div>`;
+  h+=`<label>${t("place")}</label><div class="row"><select data-fn="edPl">${placeOptions(r.pl)}</select><button class="sm" data-act="quickPlace" data-ctx="edit">${t("addPlaceBtn")}</button></div>`;
+  h+=`<div class="row2"><div><label>${t("extra")}</label><input type="number" inputmode="decimal" value="${r.x||""}" data-fn="edF" data-f="x"></div>
+    <div><label>${t("ded")}</label><input type="number" inputmode="decimal" value="${r.d||""}" data-fn="edF" data-f="d"></div></div>`;
+  h+=`<p class="total"><span id="edPay">${money(payOfRec(w,r))} ${cur()}</span></p>`;
+  h+=`<div class="btns"><button data-act="edDone">${t("done")}</button><button class="danger" data-act="edDel">${t("delDay")}</button></div>`;
+  $("#sheet").innerHTML=h;
+  $("#modal").hidden=false;
+}
+ACT.editDay=el=>{
+  const r=(S.days[el.dataset.d]||{})[el.dataset.w];
+  if(!r)return;
+  if(r.paid){uiAlert(t("paidLocked"));return;}
+  ED={date:el.dataset.d,wid:el.dataset.w};
+  drawEdit();
+};
+const edRec=()=>S.days[ED.date][ED.wid];
+ACT.edAtt=el=>{edRec().f=+el.dataset.v;save();drawEdit();};
+FN.edPl=(el,val)=>{edRec().pl=val;save();};
+FN.edF=el=>{
+  const r=edRec(),w=W(ED.wid);
+  r[el.dataset.f]=el.value===""?"":num(el.value);
+  save();
+  $("#edPay").textContent=money(payOfRec(w,r))+" "+S.settings.cur;
+};
+ACT.edDone=()=>{closeModal();renderAll();};
+ACT.edDel=async()=>{
+  if(!(await uiConfirm(t("confirmDel"),true)))return;
+  delete S.days[ED.date][ED.wid];
+  if(!Object.keys(S.days[ED.date]).length)delete S.days[ED.date];
+  save();closeModal();renderAll();
+};
+$("#modal").addEventListener("click",e=>{if(e.target&&e.target.id==="modal"){closeModal();renderAll();}});
+
+/* ----- Pay worker (sheet) ----- */
+let PAY=null;
+ACT.payOpen=el=>{
+  const wid=el.dataset.id;
+  PAY={wid:wid,sel:new Set(unpaidDates(wid)),advSel:new Set(advPending(wid).map(a=>a.id)),ded:"",note:"",date:today()};
+  drawPay();
+  $("#modal").hidden=false;
+};
+function payAdvNow(){return advSum(advPending(PAY.wid).filter(a=>PAY.advSel.has(a.id)));}
+function payNetNow(){return sumPay(dayRows(PAY.wid,[...PAY.sel]))-payAdvNow()-num(PAY.ded);}
+function updPayNet(){const el=$("#payNet");if(el)el.textContent=money(payNetNow())+" "+S.settings.cur;}
+function drawPay(){
+  const w=W(PAY.wid),rows=dayRows(PAY.wid,unpaidDates(PAY.wid)),adv=advPending(PAY.wid);
+  let h=`<h2>${t("payTitle")}: ${esc(w.name)}</h2><label>${t("pickDays")}</label><div class="card">`;
+  h+=rows.map(r=>`<label class="pick"><input type="checkbox" data-fn="paySel" data-d="${r.date}" ${PAY.sel.has(r.date)?"checked":""}><span>${wday(r.date)} ${fd(r.date)}${r.pl?" — "+esc(r.pl):""}${r.f===0.5?" — "+t("attHalf"):""}</span><strong>${money(r.pay)}</strong></label>`).join("");
+  h+=`</div><button class="sm ghost" data-act="paySelAll">${t("selAll")}</button>`;
+  if(adv.length){
+    h+=`<label>${t("advDeductNow")}</label><div class="card">`+adv.map(a=>`<label class="pick"><input type="checkbox" data-fn="payAdv" data-id="${a.id}" ${PAY.advSel.has(a.id)?"checked":""}><span>${fd(a.date)}${a.note?" — "+esc(a.note):""}</span><strong>- ${money(a.amount)}</strong></label>`).join("")+`</div>`;
+  }
+  h+=`<label>${t("advance")}</label><input type="number" inputmode="decimal" value="${esc(PAY.ded)}" data-fn="payField" data-f="ded">`;
+  h+=`<label>${t("payNote")}</label><input value="${esc(PAY.note)}" data-fn="payField" data-f="note">`;
+  h+=`<label>${t("payDate")}</label><input type="date" value="${PAY.date}" data-fn="payField" data-f="date">`;
+  h+=`<p class="total">${t("netLabel")}: <span id="payNet"></span></p>`;
+  h+=`<div class="btns"><button class="ok" data-act="payConfirm">${t("confirmPay")}</button><button class="ghost" data-act="payClose">${t("cancel")}</button></div>`;
+  $("#sheet").innerHTML=h;
+  updPayNet();
+}
+FN.paySel=el=>{if(el.checked)PAY.sel.add(el.dataset.d);else PAY.sel.delete(el.dataset.d);updPayNet();};
+FN.payAdv=el=>{if(el.checked)PAY.advSel.add(el.dataset.id);else PAY.advSel.delete(el.dataset.id);updPayNet();};
+FN.payField=(el,val)=>{PAY[el.dataset.f]=val;updPayNet();};
+ACT.paySelAll=()=>{PAY.sel=new Set(unpaidDates(PAY.wid));drawPay();};
+ACT.payConfirm=()=>{
+  const dates=[...PAY.sel].sort();
+  if(!dates.length){uiAlert(t("noDaysSel"));return;}
+  const gross=sumPay(dayRows(PAY.wid,dates)),ded=num(PAY.ded);
+  const advs=advPending(PAY.wid).filter(a=>PAY.advSel.has(a.id)),advTotal=advSum(advs);
+  const net=gross-advTotal-ded;
+  if(net<0){uiAlert(t("negNet"));return;}
+  const p={id:uid(),no:S.no.pay++,wid:PAY.wid,date:PAY.date||today(),days:dates,gross:gross,ded:ded,advIds:advs.map(a=>a.id),advTotal:advTotal,net:net,note:PAY.note||""};
+  dates.forEach(dt=>{S.days[dt][PAY.wid].paid=p.id;});
+  advs.forEach(a=>{a.payId=p.id;});
+  S.pays.push(p);save();closeModal();renderAll();openVoucher(p.id);
+};
+
+/* ===================== WORKERS ===================== */
+const now0=new Date();
+let WV={id:null,y:now0.getFullYear(),m:now0.getMonth(),sel:null};
+D.wk={name:"",rate:"",phone:""};
+D.plc={name:""};
+D.adv={amount:"",note:"",date:today()};
+function workersList(){
+  let h=`<h2>${t("tabWorkers")}</h2>
+    <div class="row2"><div><label>${t("name")}</label><input value="${esc(D.wk.name)}" data-b="wk.name"></div>
+    <div><label>${t("dailyRate")}</label><input type="number" inputmode="decimal" value="${esc(D.wk.rate)}" data-b="wk.rate"></div></div>
+    <label>${t("phone")}</label><input value="${esc(D.wk.phone)}" data-b="wk.phone">
+    <div class="btns"><button data-act="addWorker">${t("addWorker")}</button></div>`;
+  h+=S.workers.map(w=>{
+    const amt=sumPay(dayRows(w.id,unpaidDates(w.id)));
+    return `<div class="card"><div class="split"><div><strong>${esc(w.name)}</strong><div class="muted">${t("dailyRate")}: ${money(w.rate)} ${cur()}${w.phone?" — "+LTR(w.phone):""}</div></div>
+      <div style="text-align:end"><div class="muted">${t("unpaidAmt")}</div><strong class="red">${money(amt)} ${cur()}</strong></div></div>
+      <div class="btns"><button class="sm" data-act="wOpen" data-id="${w.id}">${t("details")}</button><button class="sm ghost" data-act="wEdit" data-id="${w.id}">${t("edit")}</button><button class="sm danger" data-act="wDel" data-id="${w.id}">${t("delete")}</button></div></div>`;
+  }).join("");
+  h+=`<h2>${t("placesTitle")}</h2><div class="row"><input placeholder="${t("placeName")}" value="${esc(D.plc.name)}" data-b="plc.name"><button data-act="addPlaceW">${t("addPlace")}</button></div>`;
+  h+=S.places.length?S.places.map(p=>{
+    const rows=allRows(r=>r.plId===p.id),days=rows.reduce((s,r)=>s+r.f,0),tot=sumPay(rows);
+    return `<div class="card"><div class="split"><strong>${esc(p.name)}</strong><span class="muted">${money(days)} ${t("days")} — ${money(tot)} ${cur()}</span></div>
+      <div class="btns"><button class="sm ghost" data-act="editPlace" data-id="${p.id}">${t("edit")}</button><button class="sm danger" data-act="delPlace" data-id="${p.id}">${t("delete")}</button></div></div>`;
+  }).join(""):`<p class="muted">${t("noPlaces")}</p>`;
+  return h;
+}
+function calHTML(w){
+  const L=S.settings.ui,y=WV.y,m=WV.m;
+  const first=new Date(y,m,1),dim=new Date(y,m+1,0).getDate(),off=(first.getDay()+6)%7;
+  let cells=WD[L].map(x=>`<div class="wd">${x}</div>`).join("");
+  for(let i=0;i<off;i++)cells+=`<div class="cd empty"></div>`;
+  let mDays=0,mTotal=0;
+  for(let dd=1;dd<=dim;dd++){
+    const iso=y+"-"+pad(m+1)+"-"+pad(dd),r=(S.days[iso]||{})[w.id];
+    let cls="";
+    if(r&&r.w){cls=r.paid?"paid":"unp";mDays+=fOf(r);mTotal+=payOfRec(w,r);}
+    cells+=`<button class="cd ${cls} ${WV.sel===iso?"sel":""}" data-act="calDay" data-d="${iso}">${dd}</button>`;
+  }
+  let h=`<div class="split"><button class="sm ghost" data-act="calPrev">${t("prevMonth")}</button><strong>${MONTHS[L][m]} ${y}</strong><button class="sm ghost" data-act="calNext">${t("nextMonth")}</button></div>`;
+  h+=`<div class="cal">${cells}</div>`;
+  h+=`<div class="legend"><span><i style="background:var(--ok)"></i>${t("legendPaid")}</span><span><i style="background:var(--accent)"></i>${t("legendUnpaid")}</span><span><i style="background:#fff"></i>${t("legendNone")}</span></div>`;
+  h+=`<p class="muted">${t("monthSummary")}: ${money(mDays)} — ${money(mTotal)} ${cur()}</p>`;
+  if(WV.sel){
+    const r=(S.days[WV.sel]||{})[w.id];
+    if(r&&r.w){
+      h+=`<div class="card"><strong>${wday(WV.sel)} ${fd(WV.sel)}</strong><div>${plName(r.pl)?esc(plName(r.pl))+" — ":""}${attUI(fOf(r))} — ${money(payOfRec(w,r))} ${cur()} — ${r.paid?t("legendPaid"):t("legendUnpaid")}</div>
+        ${r.paid?"":`<div class="btns"><button class="sm ghost" data-act="editDay" data-d="${WV.sel}" data-w="${w.id}">${t("edit")}</button><button class="sm ghost" data-act="openDaily">${t("openDaily")}</button></div>`}</div>`;
+    }else h+=`<div class="card"><strong>${wday(WV.sel)} ${fd(WV.sel)}</strong><div class="muted">${t("noWork")}</div></div>`;
+  }
+  return h;
+}
+function workerDetail(w){
+  const ds=unpaidDates(w.id),amt=sumPay(dayRows(w.id,ds));
+  const worked=wDays(w.id,()=>true).reduce((s,dt)=>s+fOf(S.days[dt][w.id]),0);
+  const pays=S.pays.filter(p=>p.wid===w.id),paidTotal=pays.reduce((s,p)=>s+p.net,0);
+  const advs=S.advances.filter(a=>a.wid===w.id),advOut=advSum(advs.filter(a=>!a.payId));
+  const ym=WV.y+"-"+pad(WV.m+1);
+  let h=`<div class="btns"><button class="sm ghost" data-act="wBack">${t("back")}</button></div><h2>${esc(w.name)}</h2>
+    <div class="card"><div class="split"><span>${t("dailyRate")}</span><strong>${money(w.rate)} ${cur()}</strong></div>
+    <div class="split"><span>${t("daysWorked")}</span><strong>${money(worked)}</strong></div>
+    <div class="split"><span>${t("unpaidDays")}</span><strong>${ds.length}</strong></div>
+    <div class="split"><span>${t("unpaidAmt")}</span><strong class="red">${money(amt)} ${cur()}</strong></div>
+    ${advOut>0?`<div class="split"><span>${t("advOutstanding")}</span><strong>${money(advOut)} ${cur()}</strong></div>`:""}
+    <div class="split"><span>${t("paidTotal")}</span><strong class="green">${money(paidTotal)} ${cur()}</strong></div>
+    <div class="btns">${ds.length?`<button class="sm ok" data-act="payOpen" data-id="${w.id}">${t("payBtn")}</button><button class="sm ghost" data-act="stmt" data-id="${w.id}">${t("stmtBtn")}</button>`:""}</div></div>`;
+  h+=`<h3>${t("calendar")}</h3>`+calHTML(w);
+  h+=`<h3>${t("monthLog")}</h3>`+logTable(allRows(r=>r.wid===w.id&&r.date.startsWith(ym)),false);
+  h+=`<div class="btns"><button class="sm" data-act="monthStmt" data-id="${w.id}">${t("monthStmtBtn")}</button></div>`;
+  h+=`<h3>${t("advTitle")}</h3><div class="card"><div class="row2"><div><label>${t("advAmount")}</label><input type="number" inputmode="decimal" value="${esc(D.adv.amount)}" data-b="adv.amount"></div>
+    <div><label>${t("date")}</label><input type="date" value="${D.adv.date}" data-b="adv.date"></div></div>
+    <label>${t("payNote")}</label><input value="${esc(D.adv.note)}" data-b="adv.note">
+    <div class="btns"><button class="sm" data-act="addAdv" data-id="${w.id}">${t("addAdv")}</button></div></div>`;
+  h+=advs.length?[...advs].reverse().map(a=>`<div class="card"><div class="split"><strong>${pn(a.no)} — ${fd(a.date)}</strong><span class="badge ${a.payId?"ok":"mid"}">${a.payId?t("advDeducted"):t("advPending")}</span></div>
+    <div class="split"><span class="muted">${esc(a.note)}</span><strong>${money(a.amount)} ${cur()}</strong></div>
+    <div class="btns"><button class="sm" data-act="advDoc" data-id="${a.id}">${t("advPdf")}</button>${a.payId?"":`<button class="sm danger" data-act="delAdv" data-id="${a.id}">${t("delete")}</button>`}</div></div>`).join(""):`<p class="muted">${t("advNone")}</p>`;
+  h+=`<h3>${t("payments")}</h3>`;
+  h+=pays.length?[...pays].reverse().map(p=>`<div class="card"><div class="split"><strong>${pn(p.no)}</strong><span>${fd(p.date)}</span></div>
+    <div class="split"><span>${p.days.length} ${t("days")}</span><strong class="green">${money(p.net)} ${cur()}</strong></div>
+    <div class="btns"><button class="sm" data-act="voucher" data-id="${p.id}">${t("voucherPdf")}</button><button class="sm danger" data-act="undoPay" data-id="${p.id}">${t("undoPay")}</button></div></div>`).join(""):`<p class="muted">${t("noPayments")}</p>`;
+  return h;
+}
+function renderWorkers(){$("#workersView").innerHTML=(WV.id&&W(WV.id))?workerDetail(W(WV.id)):workersList();}
+ACT.addWorker=()=>{
+  const n=D.wk.name.trim();
+  if(!n)return;
+  S.workers.push({id:uid(),name:n,rate:num(D.wk.rate),phone:D.wk.phone.trim()});
+  D.wk={name:"",rate:"",phone:""};
+  save();renderAll();
+};
+ACT.addPlaceW=()=>{
+  const n=D.plc.name.trim();
+  if(!n)return;
+  addPlaceByName(n);D.plc={name:""};
+  save();renderAll();
+};
+ACT.editPlace=async el=>{
+  const p=PL(el.dataset.id);
+  const n=await uiPrompt(t("placeName"),p.name);
+  if(n===null||!n.trim())return;
+  p.name=n.trim();save();renderAll();
+};
+ACT.delPlace=async el=>{
+  const id=el.dataset.id;
+  let n=0;
+  Object.values(S.days).forEach(day=>Object.values(day).forEach(r=>{if(r.pl===id)n++;}));
+  const msg=n?t("confirmDelPlaceUsed").replace("{n}",n):t("confirmDel");
+  if(!(await uiConfirm(msg,true)))return;
+  Object.values(S.days).forEach(day=>Object.values(day).forEach(r=>{if(r.pl===id)r.pl="";}));
+  S.places=S.places.filter(p=>p.id!==id);
+  if(S.last.pl===id)S.last.pl="";
+  save();renderAll();
+};
+ACT.wOpen=el=>{WV.id=el.dataset.id;WV.sel=null;saveUI();renderWorkers();window.scrollTo(0,0);};
+ACT.wBack=()=>{WV.id=null;saveUI();renderWorkers();};
+ACT.wEdit=async el=>{
+  const w=W(el.dataset.id);
+  const n=await uiPrompt(t("name"),w.name);if(n===null)return;
+  const r=await uiPrompt(t("dailyRate"),w.rate);if(r===null)return;
+  const p=await uiPrompt(t("phone"),w.phone||"");if(p===null)return;
+  w.name=n.trim()||w.name;w.rate=num(r);w.phone=p.trim();
+  save();renderAll();
+};
+ACT.wDel=async el=>{
+  const id=el.dataset.id;
+  const nDays=Object.values(S.days).filter(day=>day[id]).length,nPays=S.pays.filter(p=>p.wid===id).length,nAdv=S.advances.filter(a=>a.wid===id).length;
+  const has=nDays+nPays+nAdv>0;
+  const msg=has?t("confirmDelWorkerAll").replace("{n}",nDays).replace("{p}",nPays).replace("{a}",nAdv):t("confirmDel");
+  if(!(await uiConfirm(msg,true)))return;
+  Object.keys(S.days).forEach(dt=>{delete S.days[dt][id];if(!Object.keys(S.days[dt]).length)delete S.days[dt];});
+  S.pays=S.pays.filter(p=>p.wid!==id);
+  S.advances=S.advances.filter(a=>a.wid!==id);
+  S.workers=S.workers.filter(w=>w.id!==id);
+  if(WV.id===id)WV.id=null;
+  save();renderAll();
+};
+ACT.calPrev=()=>{WV.m--;if(WV.m<0){WV.m=11;WV.y--;}saveUI();renderWorkers();};
+ACT.calNext=()=>{WV.m++;if(WV.m>11){WV.m=0;WV.y++;}saveUI();renderWorkers();};
+ACT.calDay=el=>{WV.sel=el.dataset.d;renderWorkers();};
+ACT.openDaily=()=>{dailyDate=WV.sel;gotoTab("daily");renderDaily();};
+ACT.monthStmt=el=>{
+  const wid=el.dataset.id,ym=WV.y+"-"+pad(WV.m+1),w=W(wid);
+  if(!allRows(r=>r.wid===wid&&r.date.startsWith(ym)).length){uiAlert(t("noLog"));return;}
+  showDoc(L=>monthStmtDoc(wid,ym,L),"month-"+ym+"-"+w.name.replace(/\s+/g,"_")+".pdf");
+};
+ACT.voucher=el=>openVoucher(el.dataset.id);
+ACT.undoPay=async el=>{
+  if(!(await uiConfirm(t("confirmUndo"),true)))return;
+  const p=S.pays.find(x=>x.id===el.dataset.id);
+  if(!p)return;
+  p.days.forEach(dt=>{const r=S.days[dt]&&S.days[dt][p.wid];if(r&&r.paid===p.id)delete r.paid;});
+  S.advances.forEach(a=>{if(a.payId===p.id)a.payId=null;});
+  S.pays=S.pays.filter(x=>x!==p);
+  save();renderAll();
+};
+ACT.addAdv=el=>{
+  const amt=num(D.adv.amount);
+  if(amt<=0){uiAlert(t("needAdvAmount"));return;}
+  const a={id:uid(),no:S.no.adv++,wid:el.dataset.id,date:D.adv.date||today(),amount:amt,note:D.adv.note.trim(),payId:null};
+  S.advances.push(a);
+  D.adv={amount:"",note:"",date:today()};
+  save();renderAll();openAdvance(a.id);
+};
+ACT.advDoc=el=>openAdvance(el.dataset.id);
+ACT.delAdv=async el=>{
+  if(!(await uiConfirm(t("confirmDel"),true)))return;
+  S.advances=S.advances.filter(a=>a.id!==el.dataset.id);
+  save();renderAll();
+};
+
+/* ===================== INVOICES ===================== */
+const newInv=()=>({id:null,date:today(),custId:"",lines:[{pid:"",desc:"",qty:"1",price:"",unit:""}],disc:"",vat:S.settings.vat?String(S.settings.vat):"",notes:""});
+D.inv=newInv();
+const custOptions=sel=>`<option value="">${t("chooseCustomer")}</option>`+S.customers.map(c=>`<option value="${c.id}" ${c.id===sel?"selected":""}>${esc(c.name)}</option>`).join("");
+function lineHTML(l,i){
+  return `<div class="card lcard"><select data-b="inv.lines.${i}.pid" data-fn="lineProd" data-i="${i}"><option value="">${t("customItem")}</option>${S.products.map(p=>`<option value="${p.id}" ${l.pid===p.id?"selected":""}>${esc(p.name)} — ${money(p.price)}</option>`).join("")}</select>
+    <input placeholder="${t("desc")}" value="${esc(l.desc)}" data-b="inv.lines.${i}.desc">
+    <div class="row3"><div><label class="mini">${t("qty")}</label><input type="number" inputmode="decimal" placeholder="${t("qty")}" value="${esc(l.qty)}" data-b="inv.lines.${i}.qty" data-fn="invCalc"></div>
+    <div><label class="mini">${t("unit")}</label><input placeholder="${t("unit")}" value="${esc(l.unit||"")}" data-b="inv.lines.${i}.unit"></div>
+    <div><label class="mini">${t("price")}</label><input type="number" inputmode="decimal" placeholder="${t("price")}" value="${esc(l.price)}" data-b="inv.lines.${i}.price" data-fn="invCalc"></div></div>
+    <div class="split"><strong class="lt">${money(num(l.qty)*num(l.price))}</strong><span class="row" style="gap:6px">${l.pid?"":`<button class="sm ghost" data-act="lineToProduct" data-i="${i}">${t("saveAsProduct")}</button>`}<button class="danger sm" data-act="delLine" data-i="${i}">${t("delete")}</button></span></div></div>`;
+}
+function invStatus(inv){
+  const tot=r2(invTotals(inv).total),paid=r2(invPaid(inv.id));
+  if(paid<=0)return ["unpaidS","warn"];
+  return paid+0.005>=tot?["paidS","ok"]:["partialS","mid"];
+}
+function invListHTML(){
+  if(!S.invoices.length)return `<p class="muted">${t("noInvoices")}</p>`;
+  return [...S.invoices].reverse().map(inv=>{
+    const tot=invTotals(inv).total,paid=invPaid(inv.id),st=invStatus(inv);
+    return `<div class="card"><div class="split"><strong>${pn(inv.no)} — ${esc(custOf(inv.custId,inv.custName).name)}</strong><span class="badge ${st[1]}">${t(st[0])}</span></div>
+      <div class="muted">${fd(inv.date)}</div>
+      <div class="split"><span>${t("total")}</span><strong>${money(tot)} ${cur()}</strong></div>
+      ${paid>0?`<div class="split"><span>${t("paidSoFar")}</span><span>${money(paid)} ${cur()}</span></div><div class="split"><span>${t("balance")}</span><span>${money(tot-paid)} ${cur()}</span></div>`:""}
+      <div class="btns"><button class="sm" data-act="invPdf" data-id="${inv.id}">${t("pdf")}</button><button class="sm ok" data-act="recFromInv" data-id="${inv.id}">${t("makeReceipt")}</button><button class="sm ghost" data-act="editInv" data-id="${inv.id}">${t("edit")}</button><button class="sm ghost" data-act="dupInv" data-id="${inv.id}">${t("dupInv")}</button><button class="sm danger" data-act="delInv" data-id="${inv.id}">${t("delete")}</button></div></div>`;
+  }).join("");
+}
+function renderInvoices(){
+  const v=D.inv,editing=v.id?S.invoices.find(i=>i.id===v.id):null;
+  let h=`<h2>${editing?t("editInvoice")+" "+pn(editing.no):t("newInvoice")}</h2>`;
+  h+=`<label>${t("date")}</label><input type="date" value="${v.date}" data-b="inv.date">`;
+  h+=`<label>${t("customer")}</label><div class="row"><select data-b="inv.custId">${custOptions(v.custId)}</select><button class="sm" data-act="quickCust" data-for="inv">${t("addCustBtn")}</button></div>`;
+  h+=`<h3>${t("items")}</h3>`+v.lines.map((l,i)=>lineHTML(l,i)).join("");
+  h+=`<div class="btns"><button class="sm" data-act="pickProducts">${t("pickProducts")}</button><button class="ghost sm" data-act="addLine">${t("addLine")}</button></div>`;
+  h+=`<div class="row2"><div><label>${t("discount")}</label><input type="number" inputmode="decimal" value="${esc(v.disc)}" data-b="inv.disc" data-fn="invCalc"></div>
+    <div><label>${t("vatPct")}</label><input type="number" inputmode="decimal" value="${esc(v.vat)}" data-b="inv.vat" data-fn="invCalc"></div></div>`;
+  h+=`<label>${t("notes")}</label><textarea rows="2" data-b="inv.notes">${esc(v.notes)}</textarea>`;
+  h+=`<div class="card"><div class="split"><span>${t("subtotal")}</span><span id="iSub"></span></div><div class="split"><span>${t("discount")}</span><span id="iDisc"></span></div><div class="split"><span>${t("vatPct")}</span><span id="iVat"></span></div><div class="split total"><span>${t("total")}</span><span id="iTot"></span></div></div>`;
+  h+=`<div class="btns"><button data-act="saveInv">${t("saveInv")}</button>${editing?`<button class="ghost" data-act="cancelInv">${t("cancelEdit")}</button>`:""}</div>`;
+  h+=`<h2>${t("savedInvoices")}</h2>`+invListHTML();
+  $("#invoicesView").innerHTML=h;
+  refreshInvTotals();
+}
+function refreshInvTotals(){
+  const tt=invTotals(D.inv),c=" "+S.settings.cur;
+  const set=(id,v)=>{const el=$(id);if(el)el.textContent=v;};
+  set("#iSub",money(tt.sub)+c);set("#iDisc",money(tt.disc)+c);set("#iVat",money(tt.vat)+c);set("#iTot",money(tt.total)+c);
+  $$("#invoicesView .lt").forEach((el,i)=>{const l=D.inv.lines[i];if(l)el.textContent=money(num(l.qty)*num(l.price));});
+}
+FN.invCalc=()=>refreshInvTotals();
+FN.lineProd=(el,val)=>{
+  const l=D.inv.lines[+el.dataset.i],p=S.products.find(x=>x.id===val);
+  if(p){l.desc=p.name;l.price=String(p.price);l.unit=p.unit||"";}
+  renderInvoices();
+};
+ACT.addLine=()=>{D.inv.lines.push({pid:"",desc:"",qty:"1",price:"",unit:""});renderInvoices();};
+ACT.delLine=el=>{D.inv.lines.splice(+el.dataset.i,1);if(!D.inv.lines.length)D.inv.lines.push({pid:"",desc:"",qty:"1",price:"",unit:""});renderInvoices();};
+ACT.quickCust=async el=>{
+  const n=await uiPrompt(t("askCustName"));
+  if(!n||!n.trim())return;
+  const ph=await uiPrompt(t("askCustPhone"))||"";
+  const c={id:uid(),name:n.trim(),phone:ph.trim(),addr:""};
+  S.customers.push(c);save();
+  if(el.dataset.for==="inv")D.inv.custId=c.id;else{D.rec.custId=c.id;D.rec.invId="";}
+  renderAll();
+};
+ACT.saveInv=()=>{
+  const v=D.inv;
+  if(!v.custId){uiAlert(t("needCustomer"));return;}
+  const lines=v.lines.filter(l=>l.desc.trim()||num(l.price)).map(l=>({pid:l.pid,desc:l.desc.trim(),qty:l.qty===""?1:num(l.qty),price:num(l.price),unit:(l.unit||"").trim()}));
+  if(!lines.length){uiAlert(t("needLines"));return;}
+  const c=S.customers.find(x=>x.id===v.custId);
+  let inv;
+  if(v.id)inv=S.invoices.find(i=>i.id===v.id);
+  if(!inv){inv={id:uid(),no:S.no.inv++};S.invoices.push(inv);}
+  Object.assign(inv,{date:v.date||today(),custId:v.custId,custName:c?c.name:"",lines:lines,disc:num(v.disc),vat:num(v.vat),notes:v.notes});
+  save();D.inv=newInv();renderAll();openInvoice(inv.id);
+};
+ACT.cancelInv=()=>{D.inv=newInv();renderInvoices();};
+ACT.dupInv=el=>{
+  const inv=S.invoices.find(i=>i.id===el.dataset.id);
+  D.inv={id:null,date:today(),custId:inv.custId,lines:inv.lines.map(l=>({pid:l.pid||"",desc:l.desc,qty:String(l.qty),price:String(l.price),unit:l.unit||""})),
+    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||""};
+  renderInvoices();window.scrollTo(0,0);
+};
+ACT.lineToProduct=async el=>{
+  const l=D.inv.lines[+el.dataset.i],n=(l.desc||"").trim();
+  if(!n)return;
+  let p=S.products.find(x=>x.name.trim().toLowerCase()===n.toLowerCase());
+  if(!p){p={id:uid(),name:n,price:num(l.price),unit:(l.unit||"").trim()};S.products.push(p);}
+  l.pid=p.id;save();renderAll();
+  await uiAlert(t("productSaved"));
+};
+
+/* ----- Pick several saved products at once ----- */
+let PICK=null;
+ACT.pickProducts=()=>{PICK={sel:{},q:""};drawPick();$("#modal").hidden=false;};
+function pickRows(){
+  if(!S.products.length)return `<p class="muted">${t("pickEmpty")}</p>`;
+  const q=PICK.q.trim().toLowerCase();
+  const list=S.products.filter(p=>!q||p.name.toLowerCase().includes(q));
+  if(!list.length)return `<p class="muted">${t("pickNoMatch")}</p>`;
+  return list.map(p=>{
+    const on=PICK.sel[p.id]!=null;
+    return `<div class="pick2" data-pid="${p.id}"><label class="pk"><input type="checkbox" data-fn="pickTog" ${on?"checked":""}><span><strong>${esc(p.name)}</strong><small>${money(p.price)} ${cur()}${p.unit?" / "+esc(p.unit):""}</small></span></label><input class="pq" type="number" inputmode="decimal" value="${on?esc(PICK.sel[p.id]):"1"}" data-fn="pickQty" ${on?"":"disabled"}></div>`;
+  }).join("");
+}
+function updPickCount(){
+  const n=Object.keys(PICK.sel).length;
+  const el=$("#pickCount");if(el)el.textContent=t("pickCount").replace("{n}",n);
+  const b=$("#pickAddBtn");if(b)b.disabled=!n;
+}
+function drawPick(){
+  let h=`<h2>${t("pickTitle")}</h2><input type="search" placeholder="${t("pickSearch")}" value="${esc(PICK.q)}" data-fn="pickSearch"><div id="pickList">${pickRows()}</div>`;
+  h+=`<div class="pickbar"><div class="split"><span id="pickCount" class="total"></span><span class="row" style="gap:6px"><button class="sm ghost" data-act="pickAll">${t("selAll")}</button><button class="sm ghost" data-act="pickClear">${t("pickNone")}</button></span></div>
+    <div class="btns"><button id="pickAddBtn" data-act="pickConfirm">${t("pickAdd")}</button><button class="ghost" data-act="pickCancel">${t("cancel")}</button></div></div>`;
+  $("#sheet").innerHTML=h;updPickCount();
+}
+FN.pickSearch=(el,val)=>{PICK.q=val;$("#pickList").innerHTML=pickRows();};
+FN.pickTog=el=>{
+  const row=el.closest("[data-pid]"),q=row.querySelector(".pq");
+  if(el.checked){PICK.sel[row.dataset.pid]=q.value||"1";q.disabled=false;}
+  else{delete PICK.sel[row.dataset.pid];q.disabled=true;}
+  updPickCount();
+};
+FN.pickQty=el=>{const pid=el.closest("[data-pid]").dataset.pid;if(PICK.sel[pid]!=null)PICK.sel[pid]=el.value;};
+ACT.pickAll=()=>{
+  const q=PICK.q.trim().toLowerCase();
+  S.products.filter(p=>!q||p.name.toLowerCase().includes(q)).forEach(p=>{if(PICK.sel[p.id]==null)PICK.sel[p.id]="1";});
+  $("#pickList").innerHTML=pickRows();updPickCount();
+};
+ACT.pickClear=()=>{PICK.sel={};$("#pickList").innerHTML=pickRows();updPickCount();};
+ACT.pickCancel=()=>{closeModal();};
+ACT.pickConfirm=()=>{
+  const chosen=S.products.filter(p=>PICK.sel[p.id]!=null);
+  if(!chosen.length)return;
+  D.inv.lines=D.inv.lines.filter(l=>l.desc.trim()||num(l.price)||l.pid);
+  chosen.forEach(p=>{
+    const q=num(PICK.sel[p.id])||1,ex=D.inv.lines.find(l=>l.pid===p.id);
+    if(ex)ex.qty=String(r2(num(ex.qty)+q));
+    else D.inv.lines.push({pid:p.id,desc:p.name,qty:String(q),price:String(p.price),unit:p.unit||""});
+  });
+  closeModal();renderInvoices();
+};
+
+ACT.invPdf=el=>openInvoice(el.dataset.id);
+ACT.editInv=el=>{
+  const inv=S.invoices.find(i=>i.id===el.dataset.id);
+  D.inv={id:inv.id,date:inv.date,custId:inv.custId,lines:inv.lines.map(l=>({pid:l.pid||"",desc:l.desc,qty:String(l.qty),price:String(l.price),unit:l.unit||""})),
+    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||""};
+  renderInvoices();window.scrollTo(0,0);
+};
+ACT.delInv=async el=>{
+  if(!(await uiConfirm(t("confirmDel"),true)))return;
+  const id=el.dataset.id;
+  S.receipts.forEach(r=>{if(r.invId===id)r.invId="";});
+  S.invoices=S.invoices.filter(i=>i.id!==id);
+  if(D.inv.id===id)D.inv=newInv();
+  save();renderAll();
+};
+ACT.recFromInv=el=>{
+  const inv=S.invoices.find(i=>i.id===el.dataset.id);
+  D.rec=newRec();D.rec.custId=inv.custId;D.rec.invId=inv.id;D.rec.amount=String(Math.max(0,invBalance(inv)));
+  renderReceipts();gotoTab("receipts");
+};
+
+/* ===================== RECEIPTS ===================== */
+const newRec=()=>({date:today(),custId:"",invId:"",amount:"",words:"",forText:"",method:"cash",chequeNo:"",bank:"",chequeDate:""});
+D.rec=newRec();
+function renderReceipts(){
+  const v=D.rec;
+  const invs=S.invoices.filter(i=>i.custId===v.custId&&(invBalance(i)>0.005||i.id===v.invId));
+  let h=`<h2>${t("newReceipt")}</h2>`;
+  h+=`<label>${t("date")}</label><input type="date" value="${v.date}" data-b="rec.date">`;
+  h+=`<label>${t("customer")}</label><div class="row"><select data-b="rec.custId" data-fn="recCust">${custOptions(v.custId)}</select><button class="sm" data-act="quickCust" data-for="rec">${t("addCustBtn")}</button></div>`;
+  h+=`<label>${t("relInvoice")}</label><select data-b="rec.invId" data-fn="recInv"><option value="">${t("noInvoice")}</option>${invs.map(i=>`<option value="${i.id}" ${i.id===v.invId?"selected":""}>${pn(i.no)} — ${t("balance")}: ${money(invBalance(i))}</option>`).join("")}</select>`;
+  h+=`<label>${t("amount")} (${cur()})</label><input type="number" inputmode="decimal" value="${esc(v.amount)}" data-b="rec.amount" data-fn="recAmt">`;
+  h+=`<div class="muted">${t("wordsAuto")}: <span id="wPrev">${esc(amountWords(v.amount,S.settings.doc))}</span></div>`;
+  h+=`<label>${t("wordsOverride")}</label><input value="${esc(v.words)}" data-b="rec.words">`;
+  h+=`<label>${t("forText")}</label><input value="${esc(v.forText)}" data-b="rec.forText">`;
+  h+=`<label>${t("method")}</label><div><label class="inl"><input type="radio" name="meth" value="cash" data-b="rec.method" data-fn="recMethod" ${v.method==="cash"?"checked":""}> ${t("cash")}</label><label class="inl"><input type="radio" name="meth" value="cheque" data-b="rec.method" data-fn="recMethod" ${v.method==="cheque"?"checked":""}> ${t("cheque")}</label></div>`;
+  if(v.method==="cheque"){
+    h+=`<div class="row2"><div><label>${t("chequeNo")}</label><input value="${esc(v.chequeNo)}" data-b="rec.chequeNo"></div><div><label>${t("drawnOn")}</label><input value="${esc(v.bank)}" data-b="rec.bank"></div></div>
+      <label>${t("chequeDate")}</label><input type="date" value="${v.chequeDate}" data-b="rec.chequeDate">`;
+  }
+  h+=`<div class="btns"><button data-act="saveRec">${t("saveRec")}</button></div>`;
+  h+=`<h2>${t("savedReceipts")}</h2>`;
+  h+=S.receipts.length?[...S.receipts].reverse().map(r=>{
+    const inv=r.invId?S.invoices.find(i=>i.id===r.invId):null;
+    return `<div class="card"><div class="split"><strong>${pn(r.no)} — ${esc(custOf(r.custId,r.custName).name)}</strong><strong>${money(r.amount)} ${cur()}</strong></div>
+      <div class="muted">${fd(r.date)}${inv?" — "+t("invoiceLabel")+" "+pn(inv.no):""}</div>
+      <div class="btns"><button class="sm" data-act="recPdf" data-id="${r.id}">${t("pdf")}</button><button class="sm danger" data-act="delRec" data-id="${r.id}">${t("delete")}</button></div></div>`;
+  }).join(""):`<p class="muted">${t("noReceipts")}</p>`;
+  $("#receiptsView").innerHTML=h;
+}
+FN.recCust=()=>{D.rec.invId="";renderReceipts();};
+FN.recInv=()=>{
+  const inv=S.invoices.find(i=>i.id===D.rec.invId);
+  if(inv)D.rec.amount=String(Math.max(0,invBalance(inv)));
+  renderReceipts();
+};
+FN.recAmt=()=>{const el=$("#wPrev");if(el)el.textContent=amountWords(D.rec.amount,S.settings.doc);};
+FN.recMethod=()=>renderReceipts();
+ACT.saveRec=async()=>{
+  const v=D.rec,amt=num(v.amount);
+  if(!v.custId){uiAlert(t("needCustomer"));return;}
+  if(amt<=0){uiAlert(t("needAmount"));return;}
+  const inv=v.invId?S.invoices.find(i=>i.id===v.invId):null;
+  if(inv&&amt>invBalance(inv)+0.005&&!(await uiConfirm(t("overBalance"),true)))return;
+  const c=S.customers.find(x=>x.id===v.custId);
+  const r={id:uid(),no:S.no.rec++,date:v.date||today(),custId:v.custId,custName:c?c.name:"",invId:v.invId||"",amount:amt,
+    words:v.words.trim(),forText:v.forText.trim(),method:v.method,chequeNo:v.chequeNo,bank:v.bank,chequeDate:v.chequeDate};
+  S.receipts.push(r);save();D.rec=newRec();renderAll();openReceipt(r.id);
+};
+ACT.recPdf=el=>openReceipt(el.dataset.id);
+ACT.delRec=async el=>{
+  if(!(await uiConfirm(t("confirmDel"),true)))return;
+  S.receipts=S.receipts.filter(r=>r.id!==el.dataset.id);
+  save();renderAll();
+};
+
+/* ===================== PRODUCTS & CUSTOMERS ===================== */
+D.prod={name:"",price:"",unit:""};
+D.cust={name:"",phone:"",addr:""};
+function renderDir(){
+  let h=`<h2>${t("products")}</h2>
+    <div class="row2"><div><label>${t("prodName")}</label><input value="${esc(D.prod.name)}" data-b="prod.name"></div>
+    <div><label>${t("prodPrice")}</label><input type="number" inputmode="decimal" value="${esc(D.prod.price)}" data-b="prod.price"></div></div>
+    <label>${t("unit")}</label><input placeholder="${t("unitHint")}" value="${esc(D.prod.unit)}" data-b="prod.unit">
+    <div class="btns"><button data-act="addProd">${t("addProduct")}</button></div>`;
+  h+=S.products.length?S.products.map(p=>`<div class="card"><div class="split"><strong>${esc(p.name)}</strong><strong>${money(p.price)} ${cur()}${p.unit?" / "+esc(p.unit):""}</strong></div>
+    <div class="btns"><button class="sm ghost" data-act="editProd" data-id="${p.id}">${t("edit")}</button><button class="sm danger" data-act="delProd" data-id="${p.id}">${t("delete")}</button></div></div>`).join(""):`<p class="muted">${t("noProducts")}</p>`;
+  h+=`<h2>${t("customers")}</h2>
+    <label>${t("custName")}</label><input value="${esc(D.cust.name)}" data-b="cust.name">
+    <div class="row2"><div><label>${t("phone")}</label><input value="${esc(D.cust.phone)}" data-b="cust.phone"></div>
+    <div><label>${t("custAddr")}</label><input value="${esc(D.cust.addr)}" data-b="cust.addr"></div></div>
+    <div class="btns"><button data-act="addCust">${t("addCustomer")}</button></div>`;
+  h+=S.customers.length?S.customers.map(c=>{
+    const b=custBalance(c.id);
+    return `<div class="card"><div class="split"><strong>${esc(c.name)}</strong><span class="muted">${c.phone?LTR(c.phone):""}</span></div>
+      ${c.addr?`<div class="muted">${esc(c.addr)}</div>`:""}
+      <div class="split"><span>${t("custBalance")}</span><strong class="${b>0?"red":"green"}">${money(b)} ${cur()}</strong></div>
+      <div class="btns"><button class="sm" data-act="custStmt" data-id="${c.id}">${t("custStmtBtn")}</button><button class="sm ghost" data-act="editCust" data-id="${c.id}">${t("edit")}</button><button class="sm danger" data-act="delCust" data-id="${c.id}">${t("delete")}</button></div></div>`;
+  }).join(""):`<p class="muted">${t("noCustomers")}</p>`;
+  $("#dirView").innerHTML=h;
+}
+ACT.addProd=()=>{
+  const n=D.prod.name.trim();if(!n)return;
+  S.products.push({id:uid(),name:n,price:num(D.prod.price),unit:D.prod.unit.trim()});
+  D.prod={name:"",price:"",unit:""};save();renderAll();
+};
+ACT.editProd=async el=>{
+  const p=S.products.find(x=>x.id===el.dataset.id);
+  const n=await uiPrompt(t("prodName"),p.name);if(n===null)return;
+  const pr=await uiPrompt(t("prodPrice"),p.price);if(pr===null)return;
+  const un=await uiPrompt(t("unit"),p.unit||"");if(un===null)return;
+  p.name=n.trim()||p.name;p.price=num(pr);p.unit=un.trim();save();renderAll();
+};
+ACT.delProd=async el=>{if(!(await uiConfirm(t("confirmDel"),true)))return;S.products=S.products.filter(p=>p.id!==el.dataset.id);save();renderAll();};
+ACT.addCust=()=>{
+  const n=D.cust.name.trim();if(!n)return;
+  S.customers.push({id:uid(),name:n,phone:D.cust.phone.trim(),addr:D.cust.addr.trim()});
+  D.cust={name:"",phone:"",addr:""};save();renderAll();
+};
+ACT.editCust=async el=>{
+  const c=S.customers.find(x=>x.id===el.dataset.id);
+  const n=await uiPrompt(t("custName"),c.name);if(n===null)return;
+  const p=await uiPrompt(t("phone"),c.phone||"");if(p===null)return;
+  const a=await uiPrompt(t("custAddr"),c.addr||"");if(a===null)return;
+  c.name=n.trim()||c.name;c.phone=p.trim();c.addr=a.trim();
+  S.invoices.forEach(i=>{if(i.custId===c.id)i.custName=c.name;});
+  S.receipts.forEach(r=>{if(r.custId===c.id)r.custName=c.name;});
+  save();renderAll();
+};
+ACT.delCust=async el=>{if(!(await uiConfirm(t("confirmDel"),true)))return;S.customers=S.customers.filter(c=>c.id!==el.dataset.id);save();renderAll();};
+ACT.custStmt=el=>{
+  const id=el.dataset.id,c=S.customers.find(x=>x.id===id);
+  showDoc(L=>custStmtDoc(id,L),"customer-"+c.name.replace(/\s+/g,"_")+".pdf",L=>custStmtText(id,L),c.phone);
+};
+
+/* ===================== SUMMARY (report) ===================== */
+const REP={m:today().slice(0,7)};
+function renderReport(){
+  const m=REP.m,cs=" "+S.settings.cur;
+  const rows=allRows(r=>r.date.startsWith(m));
+  const earned=sumPay(rows);
+  const paidPays=S.pays.filter(p=>p.date.startsWith(m)).reduce((s,p)=>s+p.net,0);
+  const advGiven=S.advances.filter(a=>a.date.startsWith(m)).reduce((s,a)=>s+a.amount,0);
+  const paidOut=paidPays+advGiven;
+  const unpaidAll=S.workers.reduce((s,w)=>s+sumPay(dayRows(w.id,unpaidDates(w.id))),0);
+  const advOut=advSum(S.advances.filter(a=>!a.payId));
+  const invoiced=S.invoices.filter(i=>i.date.startsWith(m)).reduce((s,i)=>s+invTotals(i).total,0);
+  const collected=S.receipts.filter(r=>r.date.startsWith(m)).reduce((s,r)=>s+r.amount,0);
+  const receivable=S.customers.reduce((s,c)=>s+Math.max(0,custBalance(c.id)),0);
+  const row=(k,v,cls)=>`<div class="split"><span>${k}</span><strong${cls?` class="${cls}"`:""}>${v}</strong></div>`;
+  let h=`<h2>${t("tabReport")}</h2><label>${t("month")}</label><input type="month" value="${m}" data-fn="repM">`;
+  h+=`<h3>${t("repWorkers")}</h3><div class="card">`+row(t("repEarned"),money(earned)+cs)+row(t("repPaidOut"),money(paidOut)+cs)+row(t("repUnpaidAll"),money(unpaidAll)+cs,"red")+row(t("repAdvOut"),money(advOut)+cs)+`</div>`;
+  h+=`<h3>${t("repCust")}</h3><div class="card">`+row(t("repInvoiced"),money(invoiced)+cs)+row(t("repCollected"),money(collected)+cs,"green")+row(t("repReceivable"),money(receivable)+cs,"red")+`</div>`;
+  h+=`<div class="card">`+row(t("repDiff"),money(collected-paidOut)+cs,collected-paidOut>=0?"green":"red")+`<div class="muted">${t("repNote")}</div></div>`;
+  const byP={};
+  rows.forEach(r=>{const k=r.plId||"-";(byP[k]=byP[k]||{name:r.pl||t("noPlaceLabel"),days:0,pay:0});byP[k].days+=r.f;byP[k].pay+=r.pay;});
+  const pl=Object.values(byP).sort((a,b)=>b.pay-a.pay);
+  h+=`<h3>${t("repByPlace")}</h3>`;
+  h+=pl.length?`<div class="tw"><table class="logt"><thead><tr><th>${t("place")}</th><th>${t("logDays")}</th><th>${t("colWage")}</th></tr></thead><tbody>`+pl.map(x=>`<tr><td><strong>${esc(x.name)}</strong></td><td>${money(x.days)}</td><td>${money(x.pay)}</td></tr>`).join("")+`</tbody></table></div>`:`<p class="muted">${t("noLog")}</p>`;
+  const byW={};
+  rows.forEach(r=>{(byW[r.wid]=byW[r.wid]||{name:r.name,days:0,pay:0,unp:0});byW[r.wid].days+=r.f;byW[r.wid].pay+=r.pay;if(!r.paid)byW[r.wid].unp+=r.pay;});
+  const wk=Object.values(byW).sort((a,b)=>b.pay-a.pay);
+  h+=`<h3>${t("repByWorker")}</h3>`;
+  h+=wk.length?`<div class="tw"><table class="logt"><thead><tr><th>${t("colName")}</th><th>${t("logDays")}</th><th>${t("colWage")}</th><th>${t("legendUnpaid")}</th></tr></thead><tbody>`+wk.map(x=>`<tr><td><strong>${esc(x.name)}</strong></td><td>${money(x.days)}</td><td>${money(x.pay)}</td><td class="${x.unp?"wu":""}">${money(x.unp)}</td></tr>`).join("")+`</tbody></table></div>`:`<p class="muted">${t("noLog")}</p>`;
+  $("#reportView").innerHTML=h;
+}
+FN.repM=(el,val)=>{REP.m=val||today().slice(0,7);saveUI();renderReport();};
+
+/* ===================== SETTINGS ===================== */
+function renderSettings(){
+  const s=S.settings,c=s.co;
+  const inp=(label,path,val,extra)=>`<label>${label}</label><input value="${esc(val)}" data-s="${path}" ${extra||""}>`;
+  let h=`<h2>${t("tabSettings")}</h2>
+    <label>${t("uiLang")}</label><select data-s="settings.ui" data-fn="uiChange"><option value="ar" ${s.ui==="ar"?"selected":""}>العربية</option><option value="en" ${s.ui==="en"?"selected":""}>English</option></select>
+    <label>${t("defDocLang")}</label><select data-s="settings.doc"><option value="ar" ${s.doc==="ar"?"selected":""}>العربية</option><option value="en" ${s.doc==="en"?"selected":""}>English</option></select>
+    `;
+  h+=installHTML();
+  h+=`<h3>${t("company")}</h3>`;
+  h+=inp(t("coName"),"settings.co.name",c.name)+inp(t("coAddrAr"),"settings.co.addrAr",c.addrAr)+inp(t("coAddrEn"),"settings.co.addrEn",c.addrEn)+
+     inp(t("coReg"),"settings.co.reg",c.reg)+inp(t("coEmail"),"settings.co.email",c.email)+inp(t("phone"),"settings.co.phone",c.phone)+inp(t("waCC"),"settings.cc",s.cc);
+  h+=`<h3>${t("logo")}</h3><div class="row"><img src="${s.logo||LOGO}" alt="" style="width:80px;height:80px;object-fit:contain;flex:none"><input type="file" accept="image/*" data-fn="logoFile"></div>
+    <div class="btns"><button class="sm ghost" data-act="resetLogo">${t("resetLogo")}</button></div>`;
+  h+=`<h3>${t("currency")}</h3>`+inp(t("curSymbol"),"settings.cur",s.cur)+inp(t("curAr"),"settings.curAr",s.curAr)+inp(t("curEn"),"settings.curEn",s.curEn)+
+     `<label>${t("defVat")}</label><input type="number" inputmode="decimal" value="${esc(s.vat)}" data-s="settings.vat" data-num="1">`;
+  h+=`<h3>${t("numbering")}</h3>
+    <label>${t("nextInv")}</label><input type="number" value="${S.no.inv}" data-s="no.inv" data-num="1">
+    <label>${t("nextRec")}</label><input type="number" value="${S.no.rec}" data-s="no.rec" data-num="1">
+    <label>${t("nextPay")}</label><input type="number" value="${S.no.pay}" data-s="no.pay" data-num="1">
+    <label>${t("nextAdv")}</label><input type="number" value="${S.no.adv}" data-s="no.adv" data-num="1">`;
+  h+=lockSettingsHTML();
+  h+=`<h3>${t("backup")}</h3><p class="muted">${t("backupHint")}</p>
+    <p class="muted">${t("backupLast")}: ${S.last.backup?fd(S.last.backup):t("backupNever")}</p>
+    <div class="btns"><button data-act="exportData">${t("exportData")}</button></div>
+    <label>${t("importData")}</label><input type="file" accept="application/json,.json" data-fn="importFile">`;
+  $("#settingsView").innerHTML=h;
+  $("#hLogo").src=s.logo||LOGO;
+}
+FN.uiChange=()=>{applyLang();renderAll();};
+FN.logoFile=el=>{
+  const f=el.files&&el.files[0];if(!f)return;
+  const img=new Image();
+  img.onload=()=>{
+    const k=Math.min(1,500/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");
+    c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    S.settings.logo=c.toDataURL("image/png");save();renderSettings();
+  };
+  img.src=URL.createObjectURL(f);
+};
+ACT.resetLogo=()=>{S.settings.logo="";save();renderSettings();};
+ACT.exportData=async()=>{
+  S.last.backup=today();save();
+  await saveBlob(new Blob([JSON.stringify(S)],{type:"application/json"}),"essp-backup-"+today()+".json",true);
+  renderAll();
+};
+FN.importFile=el=>{
+  const f=el.files&&el.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=async()=>{
+    try{
+      const j=JSON.parse(rd.result);
+      if(!j||!Array.isArray(j.workers)||!Array.isArray(j.invoices))throw new Error("bad");
+      if(!(await uiConfirm(t("importConfirm"),true)))return;
+      S=mergeState(DEF(),j);migrate();save();applyLang();renderAll();uiAlert(t("importOk"));
+    }catch(e){uiAlert(t("importFail"));}
+  };
+  rd.readAsText(f);
+};
+
+
+/* ===================== Install helper (Chrome "Install app") ===================== */
+let DEFERRED=null;
+const isStandalone=()=>(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();DEFERRED=e;
+  const a=document.activeElement;
+  if(!LOCKED&&!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)))renderSettings();
+});
+window.addEventListener("appinstalled",()=>{DEFERRED=null;if(!LOCKED)renderSettings();});
+function installHTML(){
+  if(isNative())return "";
+  let h=`<h3>${t("installTitle")}</h3>`;
+  if(isStandalone())return h+`<p class="muted">${t("installDone")}</p>`;
+  h+=`<p class="muted">${t("installHint")}</p><div class="btns">`;
+  if(DEFERRED)h+=`<button data-act="installNow">${t("installNow")}</button>`;
+  return h+`<button class="sm ghost" data-act="installCheck">${t("installCheck")}</button></div>`;
+}
+ACT.installNow=async()=>{
+  if(!DEFERRED)return;
+  DEFERRED.prompt();
+  try{await DEFERRED.userChoice;}catch(e){}
+  DEFERRED=null;renderSettings();
+};
+async function installReport(){
+  const out=[],ok=(c,m)=>out.push((c?"✓ ":"✗ ")+m);
+  ok(location.protocol==="https:"||location.hostname==="localhost",t("rptHttps"));
+  ok(navigator.onLine,t("rptOnline"));
+  let man=null,mUrl="";
+  try{
+    const link=document.querySelector('link[rel="manifest"]');mUrl=link.href;
+    const r=await fetch(mUrl,{cache:"no-store"});ok(r.ok,t("rptManifest")+" ("+r.status+")");
+    if(r.ok)man=await r.json();
+  }catch(e){ok(false,t("rptManifest"));}
+  for(const n of [192,512]){
+    let good=false;
+    try{
+      const ic=man&&(man.icons||[]).find(i=>String(i.sizes).indexOf(n+"x"+n)===0&&(i.purpose||"any").indexOf("any")>=0);
+      if(ic){const r=await fetch(new URL(ic.src,mUrl).href,{cache:"no-store"});good=r.ok;}
+    }catch(e){}
+    ok(good,t("rptIcon").replace("{n}",n));
+  }
+  let reg=null;
+  try{reg=await navigator.serviceWorker.getRegistration();}catch(e){}
+  ok(!!(reg&&reg.active),t("rptSw"));
+  ok(!!(navigator.serviceWorker&&navigator.serviceWorker.controller),t("rptCtrl"));
+  ok(!!DEFERRED,t("rptPrompt"));
+  out.push("",t("rptTipFiles"),t("rptTipNet"),t("rptTipReload"));
+  return out.join("\n");
+}
+ACT.installCheck=async()=>{await uiAlert(await installReport());};
+
+/* ===================== Start ===================== */
+function applyLang(){
+  const ar=S.settings.ui==="ar";
+  document.documentElement.lang=ar?"ar":"en";
+  document.documentElement.dir=ar?"rtl":"ltr";
+  $$("[data-i]").forEach(el=>{el.textContent=t(el.dataset.i);});
+  document.title=t("app");
+}
+function renderAll(){renderDaily();renderWorkers();renderInvoices();renderReceipts();renderDir();renderReport();renderSettings();}
+$("#dlg").addEventListener("click",e=>{if(e.target&&e.target.id==="dlg"){if(DLG&&DLG.o.mode==="alert")ACT.dlgOk();else ACT.dlgNo();}});
+$("#hLogo").src=S.settings.logo||LOGO;
+function loadUI(){
+  try{
+    const u=JSON.parse(localStorage.getItem(UIKEY));if(!u)return;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(u.dd))dailyDate=u.dd;
+    if(u.wid&&W(u.wid))WV.id=u.wid;
+    if(Number.isInteger(u.y)&&Number.isInteger(u.m)&&u.m>=0&&u.m<=11){WV.y=u.y;WV.m=u.m;}
+    if(u.log&&typeof u.log==="object"){
+      if(/^\d{4}-\d{2}$/.test(u.log.m))LOG.m=u.log.m;
+      LOG.wid=(u.log.wid&&W(u.log.wid))?u.log.wid:"";
+      LOG.pl=(u.log.pl&&PL(u.log.pl))?u.log.pl:"";
+      LOG.st=["","paid","unpaid"].includes(u.log.st)?u.log.st:"";
+    }
+    if(/^\d{4}-\d{2}$/.test(u.rep))REP.m=u.rep;
+    if(["daily","workers","invoices","receipts","dir","report","settings"].includes(u.tab))curTab=u.tab;
+  }catch(e){}
+}
+/* Stop "pull down at the very top = refresh the page" (it used to send you back to the Daily tab) */
+(function(){
+  let y0=0,x0=0,atTop=false;
+  document.addEventListener("touchstart",e=>{
+    if(!e.touches.length)return;
+    y0=e.touches[0].clientY;x0=e.touches[0].clientX;
+    atTop=(window.pageYOffset||document.documentElement.scrollTop||0)<=0;
+  },{passive:true});
+  document.addEventListener("touchmove",e=>{
+    if(!atTop||!e.touches.length)return;
+    const dy=e.touches[0].clientY-y0,dx=e.touches[0].clientX-x0;
+    if(dy<=0||Math.abs(dx)>Math.abs(dy))return;
+    let el=e.target;
+    while(el&&el!==document.body&&el!==document.documentElement){
+      if(el.scrollTop>0&&el.scrollHeight>el.clientHeight+1)return;
+      el=el.parentElement;
+    }
+    if(e.cancelable)e.preventDefault();
+  },{passive:false});
+})();
+applyLang();
+loadUI();
+if(lockCfg())showLock();else{renderAll();gotoTab(curTab);}
+if("serviceWorker" in navigator&&/^https?:/.test(location.protocol)&&!isNative())navigator.serviceWorker.register("sw.js").catch(()=>{});
+function nativeExit(){const A=(window.Capacitor&&Capacitor.Plugins)?Capacitor.Plugins.App:null;if(A&&A.exitApp)A.exitApp();}
+function nativeBack(){
+  if(DLG){ACT.dlgNo();return;}
+  if(LOCKED){nativeExit();return;}
+  if(VIEW){ACT.vClose();return;}
+  if(!$("#modal").hidden){closeModal();renderAll();return;}
+  if(WV.id&&$("#tab-workers").classList.contains("active")){WV.id=null;renderWorkers();return;}
+  if(!$("#tab-daily").classList.contains("active")){gotoTab("daily");return;}
+  nativeExit();
+}
+if(isNative()&&Capacitor.Plugins&&Capacitor.Plugins.App&&Capacitor.Plugins.App.addListener)Capacitor.Plugins.App.addListener("backButton",nativeBack);
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+</script>
+</body>
+</html>
