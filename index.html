@@ -101,6 +101,8 @@
   .pick2 .pq{width:84px;flex:none;text-align:center}
   .pickbar{position:sticky;bottom:-16px;background:#fff;padding:10px 0 4px;border-top:1px solid var(--line);margin-top:8px}
   .vnote{margin:8px;padding:8px 10px;border:1px solid var(--accent);background:#fff8ec;border-radius:8px;font-size:.85rem}
+  details summary{cursor:pointer;color:var(--brand);margin:6px 0;font-size:.9rem}
+  details ul{margin:6px 0;padding-inline-start:20px;font-size:.9rem}
   button.dangerSolid{background:var(--warn);border-color:var(--warn);color:#fff}
   #dlg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:110;display:flex;align-items:center;justify-content:center;padding:20px}
   .dbox{background:#fff;border-radius:12px;padding:18px;width:100%;max-width:420px}
@@ -196,6 +198,13 @@ const T={
 ar:{
   app:"ESSP — الحسابات والمستندات",
   ok:"حسناً",confirmBtn:"تأكيد",savedTo:"تم الحفظ في:",
+  tplTitle:"قوالب الفواتير (أنظمة جاهزة)",tplChoose:"— اختر قالباً —",tplUse:"استخدام القالب",tplLoaded:"القالب المحمّل",tplRefresh:"تحديث الأسعار من المنتجات",
+  tplRefreshed:"تم تحديث {n} سعر.",saveTpl:"حفظ كقالب",tplNamePrompt:"اسم القالب (مثال: نظام كاميرات 4 قنوات)",
+  tplReplace:"يوجد قالب باسم «{n}». هل تريد استبداله بالبنود الحالية؟",tplSaved:"تم حفظ القالب.",tplSection:"القوالب المحفوظة",
+  tplNone:"لا توجد قوالب بعد. جهّز فاتورة بالبنود اللازمة لنظام معيّن ثم اضغط «حفظ كقالب».",tplEstimate:"المجموع التقديري",
+  tplHow:"الفاتورة فيها بنود حالياً. شو بدك تعمل بالقالب؟",tplReplaceLines:"استبدال البنود الحالية",tplAddLines:"إضافته إلى البنود الحالية",
+  tplRename:"إعادة تسمية",tplExists:"في قالب بنفس الاسم.",tplShow:"عرض البنود",tplCopy:"نسخة",tplPickFirst:"اختر قالباً أولاً.",appVersion:"إصدار التطبيق",
+  
   installTitle:"تثبيت التطبيق على التليفون",installDone:"التطبيق مثبّت ويعمل بكامل الشاشة.",
   installHint:"إذا ما ظهر خيار «تثبيت التطبيق» بقائمة Chrome، اضغط «فحص التثبيت» لتعرف السبب.",installNow:"تثبيت التطبيق الآن",installCheck:"فحص التثبيت",
   rptHttps:"اتصال آمن (HTTPS)",rptOnline:"التليفون متصل بالإنترنت الآن",rptManifest:"ملف manifest.json موجود",rptIcon:"أيقونة {n}px موجودة",
@@ -296,6 +305,13 @@ ar:{
 en:{
   app:"ESSP — Accounts & Documents",
   ok:"OK",confirmBtn:"Confirm",savedTo:"Saved to:",
+  tplTitle:"Invoice templates (ready systems)",tplChoose:"— Choose a template —",tplUse:"Use template",tplLoaded:"Loaded template",tplRefresh:"Refresh prices from products",
+  tplRefreshed:"{n} price(s) updated.",saveTpl:"Save as template",tplNamePrompt:"Template name (e.g. 4-camera system)",
+  tplReplace:"A template named “{n}” already exists. Replace it with the current items?",tplSaved:"Template saved.",tplSection:"Saved templates",
+  tplNone:"No templates yet. Prepare an invoice with the items of a system, then tap “Save as template”.",tplEstimate:"Estimated total",
+  tplHow:"The invoice already has items. What do you want to do with the template?",tplReplaceLines:"Replace current items",tplAddLines:"Add to current items",
+  tplRename:"Rename",tplExists:"A template with that name already exists.",tplShow:"Show items",tplCopy:"copy",tplPickFirst:"Choose a template first.",appVersion:"App version",
+  
   installTitle:"Install on this phone",installDone:"The app is installed and runs full-screen.",
   installHint:"If Chrome does not offer “Install app”, tap “Check installation” to see why.",installNow:"Install app now",installCheck:"Check installation",
   rptHttps:"Secure connection (HTTPS)",rptOnline:"Phone is online right now",rptManifest:"manifest.json is available",rptIcon:"{n}px icon is available",
@@ -404,7 +420,7 @@ const DEF=()=>({
   settings:{ui:"ar",doc:"ar",logo:"",cur:"$",curAr:"دولار أمريكي",curEn:"US dollars",vat:0,cc:"961",
     co:{name:"ESSP GROUP",addrAr:"المنية - مركبتا",addrEn:"Minieh - Markabta",reg:"",email:"radwanmahfoud777@gmail.com",phone:"70 36 85 96"}},
   no:{inv:1,rec:1,pay:1,adv:1},last:{pl:"",backup:""},
-  workers:[],places:[],days:{},pays:[],advances:[],products:[],customers:[],invoices:[],receipts:[]
+  workers:[],places:[],days:{},pays:[],advances:[],products:[],customers:[],invoices:[],receipts:[],templates:[]
 });
 function mergeState(d,j){
   const s=Object.assign({},d,j);
@@ -567,7 +583,8 @@ function nextDlg(){
   const o=DLG.o;
   let h=`<div class="dbox"><p>${esc(o.msg)}</p>`;
   if(o.mode==="prompt")h+=`<input id="dlgIn" type="${o.type||"text"}" value="${esc(o.def||"")}" autocomplete="off">`;
-  h+=`<div class="btns"><button class="${o.danger?"dangerSolid":""}" data-act="dlgOk">${t(o.mode==="confirm"?"confirmBtn":"ok")}</button>${o.mode==="alert"?"":`<button class="ghost" data-act="dlgNo">${t("cancel")}</button>`}</div></div>`;
+  if(o.mode==="choice")h+=`<div class="btns" style="flex-direction:column;align-items:stretch">${o.opts.map((x,i)=>`<button data-act="dlgPick" data-i="${i}">${esc(x)}</button>`).join("")}<button class="ghost" data-act="dlgNo">${t("cancel")}</button></div></div>`;
+  else h+=`<div class="btns"><button class="${o.danger?"dangerSolid":""}" data-act="dlgOk">${t(o.mode==="confirm"?"confirmBtn":"ok")}</button>${o.mode==="alert"?"":`<button class="ghost" data-act="dlgNo">${t("cancel")}</button>`}</div></div>`;
   $("#dlg").innerHTML=h;
   $("#dlg").hidden=false;
   const inp=$("#dlgIn");
@@ -579,6 +596,8 @@ ACT.dlgNo=()=>{if(!DLG)return;endDlg(DLG.o.mode==="confirm"?false:null);};
 const uiAlert=m=>dlg({mode:"alert",msg:m});
 const uiConfirm=(m,danger)=>dlg({mode:"confirm",msg:m,danger:danger});
 const uiPrompt=(m,def,type)=>dlg({mode:"prompt",msg:m,def:def==null?"":String(def),type:type});
+const uiChoice=(m,opts)=>dlg({mode:"choice",msg:m,opts:opts});
+ACT.dlgPick=el=>{if(DLG&&DLG.o.mode==="choice")endDlg(+el.dataset.i);};
 
 /* ===================== App lock (password) ===================== */
 const LOCKKEY="essp-lock-v1";
@@ -1466,7 +1485,7 @@ ACT.delAdv=async el=>{
 };
 
 /* ===================== INVOICES ===================== */
-const newInv=()=>({id:null,date:today(),custId:"",lines:[{pid:"",desc:"",qty:"1",price:"",unit:""}],disc:"",vat:S.settings.vat?String(S.settings.vat):"",notes:""});
+const newInv=()=>({id:null,date:today(),custId:"",lines:[{pid:"",desc:"",qty:"1",price:"",unit:""}],disc:"",vat:S.settings.vat?String(S.settings.vat):"",notes:"",tplId:"",tplName:""});
 D.inv=newInv();
 const custOptions=sel=>`<option value="">${t("chooseCustomer")}</option>`+S.customers.map(c=>`<option value="${c.id}" ${c.id===sel?"selected":""}>${esc(c.name)}</option>`).join("");
 function lineHTML(l,i){
@@ -1487,7 +1506,7 @@ function invListHTML(){
   return [...S.invoices].reverse().map(inv=>{
     const tot=invTotals(inv).total,paid=invPaid(inv.id),st=invStatus(inv);
     return `<div class="card"><div class="split"><strong>${pn(inv.no)} — ${esc(custOf(inv.custId,inv.custName).name)}</strong><span class="badge ${st[1]}">${t(st[0])}</span></div>
-      <div class="muted">${fd(inv.date)}</div>
+      <div class="muted">${fd(inv.date)}${inv.tplName?" — "+esc(inv.tplName):""}</div>
       <div class="split"><span>${t("total")}</span><strong>${money(tot)} ${cur()}</strong></div>
       ${paid>0?`<div class="split"><span>${t("paidSoFar")}</span><span>${money(paid)} ${cur()}</span></div><div class="split"><span>${t("balance")}</span><span>${money(tot-paid)} ${cur()}</span></div>`:""}
       <div class="btns"><button class="sm" data-act="invPdf" data-id="${inv.id}">${t("pdf")}</button><button class="sm ok" data-act="recFromInv" data-id="${inv.id}">${t("makeReceipt")}</button><button class="sm ghost" data-act="editInv" data-id="${inv.id}">${t("edit")}</button><button class="sm ghost" data-act="dupInv" data-id="${inv.id}">${t("dupInv")}</button><button class="sm danger" data-act="delInv" data-id="${inv.id}">${t("delete")}</button></div></div>`;
@@ -1496,6 +1515,7 @@ function invListHTML(){
 function renderInvoices(){
   const v=D.inv,editing=v.id?S.invoices.find(i=>i.id===v.id):null;
   let h=`<h2>${editing?t("editInvoice")+" "+pn(editing.no):t("newInvoice")}</h2>`;
+  h+=tplBarHTML();
   h+=`<label>${t("date")}</label><input type="date" value="${v.date}" data-b="inv.date">`;
   h+=`<label>${t("customer")}</label><div class="row"><select data-b="inv.custId">${custOptions(v.custId)}</select><button class="sm" data-act="quickCust" data-for="inv">${t("addCustBtn")}</button></div>`;
   h+=`<h3>${t("items")}</h3>`+v.lines.map((l,i)=>lineHTML(l,i)).join("");
@@ -1504,7 +1524,8 @@ function renderInvoices(){
     <div><label>${t("vatPct")}</label><input type="number" inputmode="decimal" value="${esc(v.vat)}" data-b="inv.vat" data-fn="invCalc"></div></div>`;
   h+=`<label>${t("notes")}</label><textarea rows="2" data-b="inv.notes">${esc(v.notes)}</textarea>`;
   h+=`<div class="card"><div class="split"><span>${t("subtotal")}</span><span id="iSub"></span></div><div class="split"><span>${t("discount")}</span><span id="iDisc"></span></div><div class="split"><span>${t("vatPct")}</span><span id="iVat"></span></div><div class="split total"><span>${t("total")}</span><span id="iTot"></span></div></div>`;
-  h+=`<div class="btns"><button data-act="saveInv">${t("saveInv")}</button>${editing?`<button class="ghost" data-act="cancelInv">${t("cancelEdit")}</button>`:""}</div>`;
+  h+=`<div class="btns"><button data-act="saveInv">${t("saveInv")}</button><button class="ghost" data-act="saveTpl">${t("saveTpl")}</button>${editing?`<button class="ghost" data-act="cancelInv">${t("cancelEdit")}</button>`:""}</div>`;
+  h+=`<h2>${t("tplSection")}</h2>`+tplListHTML();
   h+=`<h2>${t("savedInvoices")}</h2>`+invListHTML();
   $("#invoicesView").innerHTML=h;
   refreshInvTotals();
@@ -1541,14 +1562,14 @@ ACT.saveInv=()=>{
   let inv;
   if(v.id)inv=S.invoices.find(i=>i.id===v.id);
   if(!inv){inv={id:uid(),no:S.no.inv++};S.invoices.push(inv);}
-  Object.assign(inv,{date:v.date||today(),custId:v.custId,custName:c?c.name:"",lines:lines,disc:num(v.disc),vat:num(v.vat),notes:v.notes});
+  Object.assign(inv,{date:v.date||today(),custId:v.custId,custName:c?c.name:"",lines:lines,disc:num(v.disc),vat:num(v.vat),notes:v.notes,tplName:v.tplName||""});
   save();D.inv=newInv();renderAll();openInvoice(inv.id);
 };
 ACT.cancelInv=()=>{D.inv=newInv();renderInvoices();};
 ACT.dupInv=el=>{
   const inv=S.invoices.find(i=>i.id===el.dataset.id);
   D.inv={id:null,date:today(),custId:inv.custId,lines:inv.lines.map(l=>({pid:l.pid||"",desc:l.desc,qty:String(l.qty),price:String(l.price),unit:l.unit||""})),
-    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||""};
+    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||"",tplId:"",tplName:inv.tplName||""};
   renderInvoices();window.scrollTo(0,0);
 };
 ACT.lineToProduct=async el=>{
@@ -1615,7 +1636,7 @@ ACT.invPdf=el=>openInvoice(el.dataset.id);
 ACT.editInv=el=>{
   const inv=S.invoices.find(i=>i.id===el.dataset.id);
   D.inv={id:inv.id,date:inv.date,custId:inv.custId,lines:inv.lines.map(l=>({pid:l.pid||"",desc:l.desc,qty:String(l.qty),price:String(l.price),unit:l.unit||""})),
-    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||""};
+    disc:inv.disc?String(inv.disc):"",vat:inv.vat?String(inv.vat):"",notes:inv.notes||"",tplId:"",tplName:inv.tplName||""};
   renderInvoices();window.scrollTo(0,0);
 };
 ACT.delInv=async el=>{
@@ -1630,6 +1651,118 @@ ACT.recFromInv=el=>{
   const inv=S.invoices.find(i=>i.id===el.dataset.id);
   D.rec=newRec();D.rec.custId=inv.custId;D.rec.invId=inv.id;D.rec.amount=String(Math.max(0,invBalance(inv)));
   renderReceipts();gotoTab("receipts");
+};
+
+/* ===================== Invoice templates (ready systems) ===================== */
+const APP_VERSION="8.0";
+D.tplSel="";
+const byName=(a,b)=>a.name.localeCompare(b.name,"ar");
+const tplTotal=x=>invTotals({lines:x.lines,disc:x.disc,vat:x.vat}).total;
+function tplBarHTML(){
+  const v=D.inv,hasPid=v.lines.some(l=>l.pid&&S.products.some(p=>p.id===l.pid));
+  let h=`<div class="card"><label style="margin-top:0">${t("tplTitle")}</label>`;
+  if(S.templates.length)h+=`<div class="row"><select data-b="tplSel"><option value="">${t("tplChoose")}</option>${[...S.templates].sort(byName).map(x=>`<option value="${x.id}" ${D.tplSel===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select><button class="sm" data-act="useTpl">${t("tplUse")}</button></div>`;
+  else h+=`<p class="muted" style="margin:0">${t("tplNone")}</p>`;
+  if(v.tplName)h+=`<div class="muted" style="margin-top:6px">${t("tplLoaded")}: <strong>${esc(v.tplName)}</strong></div>`;
+  if(hasPid)h+=`<div class="btns"><button class="sm ghost" data-act="refreshPrices">${t("tplRefresh")}</button></div>`;
+  return h+`</div>`;
+}
+function tplListHTML(){
+  if(!S.templates.length)return `<p class="muted">${t("tplNone")}</p>`;
+  return [...S.templates].sort(byName).map(x=>`<div class="card"><div class="split"><strong>${esc(x.name)}</strong><span class="muted">${x.lines.length} ${t("items")}</span></div>
+    <div class="split"><span class="muted">${t("tplEstimate")}</span><strong>${money(tplTotal(x))} ${cur()}</strong></div>
+    <details><summary>${t("tplShow")}</summary><ul>${x.lines.map(l=>`<li>${esc(l.desc)} × ${money(num(l.qty))}${l.unit?" "+esc(l.unit):""} — ${money(num(l.price))}</li>`).join("")}</ul></details>
+    <div class="btns"><button class="sm" data-act="useTpl" data-id="${x.id}">${t("tplUse")}</button><button class="sm ghost" data-act="renameTpl" data-id="${x.id}">${t("tplRename")}</button><button class="sm ghost" data-act="dupTpl" data-id="${x.id}">${t("dupInv")}</button><button class="sm danger" data-act="delTpl" data-id="${x.id}">${t("delete")}</button></div></div>`).join("");
+}
+function tplFromDraft(){
+  const v=D.inv;
+  return {lines:v.lines.filter(l=>l.desc.trim()||num(l.price)).map(l=>({pid:l.pid||"",desc:l.desc.trim(),qty:l.qty===""?1:num(l.qty),price:num(l.price),unit:(l.unit||"").trim()})),
+    disc:num(v.disc),vat:num(v.vat),notes:v.notes||""};
+}
+ACT.saveTpl=async()=>{
+  const d=tplFromDraft();
+  if(!d.lines.length){await uiAlert(t("needLines"));return;}
+  let name=await uiPrompt(t("tplNamePrompt"),D.inv.tplName||"");
+  if(name===null)return;
+  name=name.trim();if(!name)return;
+  const ex=S.templates.find(x=>x.name.trim().toLowerCase()===name.toLowerCase());
+  if(ex){
+    if(!(await uiConfirm(t("tplReplace").replace("{n}",ex.name),true)))return;
+    Object.assign(ex,d,{name:name,updated:today()});D.inv.tplId=ex.id;
+  }else{
+    const tpl=Object.assign({id:uid(),name:name,updated:today()},d);
+    S.templates.push(tpl);D.inv.tplId=tpl.id;
+  }
+  D.inv.tplName=name;save();renderAll();
+  await uiAlert(t("tplSaved"));
+};
+function loadTpl(id,mode){
+  const tpl=S.templates.find(x=>x.id===id);
+  if(!tpl)return;
+  const lines=tpl.lines.map(l=>({pid:l.pid||"",desc:l.desc,qty:String(l.qty),price:String(l.price),unit:l.unit||""}));
+  if(mode==="add"){
+    D.inv.lines=D.inv.lines.filter(l=>l.desc.trim()||num(l.price)||l.pid);
+    lines.forEach(nl=>{
+      const ex=nl.pid?D.inv.lines.find(l=>l.pid===nl.pid&&String(l.price)===nl.price&&(l.unit||"")===nl.unit):null;
+      if(ex)ex.qty=String(r2(num(ex.qty)+num(nl.qty)));else D.inv.lines.push(nl);
+    });
+    if(!D.inv.notes&&tpl.notes)D.inv.notes=tpl.notes;
+    if(!D.inv.vat&&tpl.vat)D.inv.vat=String(tpl.vat);
+    if(!D.inv.tplName){D.inv.tplId=tpl.id;D.inv.tplName=tpl.name;}
+  }else{
+    D.inv.lines=lines;
+    D.inv.disc=tpl.disc?String(tpl.disc):"";
+    D.inv.vat=tpl.vat?String(tpl.vat):(S.settings.vat?String(S.settings.vat):"");
+    D.inv.notes=tpl.notes||"";
+    D.inv.tplId=tpl.id;D.inv.tplName=tpl.name;
+  }
+  if(!D.inv.lines.length)D.inv.lines.push({pid:"",desc:"",qty:"1",price:"",unit:""});
+  renderInvoices();window.scrollTo(0,0);
+}
+ACT.useTpl=async el=>{
+  const id=(el&&el.dataset&&el.dataset.id)||D.tplSel;
+  if(!id){await uiAlert(t("tplPickFirst"));return;}
+  const has=D.inv.lines.some(l=>l.desc.trim()||num(l.price)||l.pid);
+  if(!has){loadTpl(id,"replace");return;}
+  const c=await uiChoice(t("tplHow"),[t("tplReplaceLines"),t("tplAddLines")]);
+  if(c===null)return;
+  loadTpl(id,c===0?"replace":"add");
+};
+ACT.refreshPrices=async()=>{
+  let n=0;
+  D.inv.lines.forEach(l=>{
+    const p=l.pid&&S.products.find(x=>x.id===l.pid);
+    if(!p)return;
+    const np=String(p.price);
+    if(String(l.price)!==np){l.price=np;n++;}
+    l.unit=p.unit||l.unit||"";
+  });
+  renderInvoices();
+  await uiAlert(t("tplRefreshed").replace("{n}",n));
+};
+ACT.renameTpl=async el=>{
+  const x=S.templates.find(o=>o.id===el.dataset.id);
+  const n=await uiPrompt(t("tplNamePrompt"),x.name);
+  if(n===null||!n.trim())return;
+  const nm=n.trim();
+  if(S.templates.some(o=>o!==x&&o.name.trim().toLowerCase()===nm.toLowerCase())){await uiAlert(t("tplExists"));return;}
+  x.name=nm;if(D.inv.tplId===x.id)D.inv.tplName=nm;
+  save();renderAll();
+};
+ACT.dupTpl=el=>{
+  const x=S.templates.find(o=>o.id===el.dataset.id);
+  let nm=x.name+" ("+t("tplCopy")+")",k=2;
+  while(S.templates.some(o=>o.name===nm))nm=x.name+" ("+t("tplCopy")+" "+(k++)+")";
+  S.templates.push({id:uid(),name:nm,updated:today(),lines:x.lines.map(l=>Object.assign({},l)),disc:x.disc,vat:x.vat,notes:x.notes});
+  save();renderAll();
+};
+ACT.delTpl=async el=>{
+  if(!(await uiConfirm(t("confirmDel"),true)))return;
+  const id=el.dataset.id;
+  S.templates=S.templates.filter(x=>x.id!==id);
+  if(D.inv.tplId===id){D.inv.tplId="";D.inv.tplName="";}
+  if(D.tplSel===id)D.tplSel="";
+  save();renderAll();
 };
 
 /* ===================== RECEIPTS ===================== */
@@ -1805,6 +1938,7 @@ function renderSettings(){
     <p class="muted">${t("backupLast")}: ${S.last.backup?fd(S.last.backup):t("backupNever")}</p>
     <div class="btns"><button data-act="exportData">${t("exportData")}</button></div>
     <label>${t("importData")}</label><input type="file" accept="application/json,.json" data-fn="importFile">`;
+  h+=`<p class="muted" style="margin-top:22px">${t("appVersion")}: ${APP_VERSION}</p>`;
   $("#settingsView").innerHTML=h;
   $("#hLogo").src=s.logo||LOGO;
 }
